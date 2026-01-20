@@ -17,6 +17,9 @@ roomKtx = "2.8.4"
 serializationPlugin = "2.3.0"
 serializationVersion = "1.9.0"
 navigationCompose = "2.8.5"
+playServiceLocation = "21.3.0"
+
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +46,8 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServiceLocation"}
+
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid"}
 osmdroid-pack = { module = "com.github.mkergall:osmbonuspack", version.ref = "osmdroidBonusPack"}
 serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationVersion"}
@@ -53,6 +58,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 
 serializationplugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationPlugin" }
 

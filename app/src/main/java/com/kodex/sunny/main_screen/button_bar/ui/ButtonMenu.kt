@@ -19,7 +19,9 @@ fun ButtonMenu(
         ButtonMenuItem.Home,
         ButtonMenuItem.Track,
         ButtonMenuItem.Login,
-        ButtonMenuItem.Settings
+        ButtonMenuItem.Map,
+        ButtonMenuItem.Settings,
+
     )
     NavigationBar(modifier = Modifier.fillMaxWidth()) {
 

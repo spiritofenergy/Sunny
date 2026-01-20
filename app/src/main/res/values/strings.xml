@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Sunny</string>
+    <string name="delete_dialog_massage">Are you sure you want to delete this track?</string>
+    <string name="time">Time</string>
+    <string name="name_track">Name Track</string>
+    <string name="average_speed">Average Speed</string>
+    <string name="speed">Speed</string>
+    <string name="distance">Distance</string>
+    <string name="save_track">Save Track</string>
+    <string name="location_update_time">Location update time</string>
+    <string name="priority">Priority"</string>
+    <string name="track_line_width">Track Line width</string>
+    <string name="track_line_color">Track Line color</string>
+    <string name="no_tracks">No Tracks</string>
+    <string name="date">Date</string>
+    <!-- BUTTON MENU -->
+    <string name="home">Home</string>
+    <string name="tracks">Tracks</string>
+    <string name="settings">Settings</string>
 </resources>
