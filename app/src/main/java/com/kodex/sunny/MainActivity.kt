@@ -1,5 +1,6 @@
 package com.kodex.sunny
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.kodex.gpstracker.main_screen.settings.ui.SettingScreen
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
 import com.kodex.sunny.main_screen.button_bar.ui.ButtonMenu
 import com.kodex.sunny.main_screen.home.data.HomeNavData
@@ -22,17 +24,18 @@ import com.kodex.sunny.main_screen.login.ui.LoginScreen
 import com.kodex.sunny.main_screen.map.data.MapNavData
 import com.kodex.sunny.main_screen.map.ui.MapScreen
 import com.kodex.sunny.main_screen.settings.data.SettingNavData
-import com.kodex.sunny.main_screen.settings.ui.SettingScreen
 import com.kodex.sunny.main_screen.tracker.data.TrackerNavData
 import com.kodex.sunny.main_screen.tracker.ui.TrackerScreen
 import com.kodex.sunny.ui.theme.SunnyTheme
 import dagger.hilt.android.AndroidEntryPoint
+import org.osmdroid.config.Configuration
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        setUpOSM(this)
         setContent {
             val navController = rememberNavController()
             val savedInstanceState = remember{
@@ -88,4 +91,11 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+
+private fun setUpOSM(context: Context){
+    val config = Configuration.getInstance()
+    config.load(context, context.getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
+    config.userAgentValue = context.packageName
 }

@@ -24,7 +24,7 @@ class MainModule {
         return Room.databaseBuilder(
         app ,
         MainDb::class.java,
-        "gps_tracker"
+        "sunny"
     ).build()
     }
 
