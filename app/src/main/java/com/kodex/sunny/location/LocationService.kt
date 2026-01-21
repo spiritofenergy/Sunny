@@ -32,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
-import kotlin.time.ExperimentalTime
 
 @AndroidEntryPoint
 class LocationService: Service() {
