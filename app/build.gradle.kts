@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.serializationplugin)
     alias(libs.plugins.hilt.plugin)
     id("kotlin-kapt")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -56,6 +57,12 @@ dependencies {
     implementation(libs.osmdroid.pack)
 
     implementation(libs.androidx.room.ktx)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    //implementation(libs.androidx.paging.common.jvm)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.hilt.android)
@@ -67,7 +74,13 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.serialization)
 
-
+   // implementation (libs.mobileads)
+    implementation(libs.androidx.paging.compose.v340rc01)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging)
+    implementation(libs.androidx.paging.common)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.v240)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

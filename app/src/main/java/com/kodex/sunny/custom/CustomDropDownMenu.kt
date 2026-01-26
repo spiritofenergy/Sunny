@@ -1,4 +1,4 @@
-package com.kodex.sunny.custom_ui
+package com.kodex.sunny.custom
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

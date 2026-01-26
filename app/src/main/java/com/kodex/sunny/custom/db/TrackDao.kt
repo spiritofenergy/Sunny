@@ -1,4 +1,4 @@
-package com.kodex.sunny.custom_ui.db
+package com.kodex.sunny.custom.db
 
 import androidx.room.Dao
 import androidx.room.Delete

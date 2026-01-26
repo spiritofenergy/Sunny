@@ -1,4 +1,4 @@
-package com.kodex.sunny.custom_ui
+package com.kodex.sunny.custom
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button

@@ -1,11 +1,11 @@
-package com.kodex.sunny.custom_ui.di
+package com.kodex.sunny.custom.di
 
 import com.kodex.sunny.utils.TimerManager
 
 
 import android.app.Application
 import androidx.room.Room
-import com.kodex.sunny.custom_ui.db.MainDb
+import com.kodex.sunny.custom.db.MainDb
 import com.kodex.sunny.location.LocationDataSharer
 import com.kodex.sunny.utils.SettingsPreferenceManager
 import dagger.Module

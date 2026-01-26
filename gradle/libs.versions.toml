@@ -1,6 +1,6 @@
 [versions]
 agp = "8.13.2"
-hiltAndroid = "2.57.2"
+hiltAndroid = "2.58"
 hiltNavigationComposeVersion = "1.3.0"
 kotlin = "2.2.21"
 coreKtx = "1.17.0"
@@ -13,19 +13,39 @@ composeBom = "2024.09.00"
 osmdroidAndroid = "6.1.10"
 osmdroidBonusPack = "6.9.0"
 ksp = "2.2.21-2.0.4"
+pagingCommon = "3.3.6"
+pagingCompose = "3.4.0-rc01"
 roomKtx = "2.8.4"
 serializationPlugin = "2.3.0"
 serializationVersion = "1.9.0"
 navigationCompose = "2.8.5"
 playServiceLocation = "21.3.0"
+googleGmsGoogleServices = "4.4.4"
+firebaseAuth = "24.0.1"
+credentials = "1.5.0"
+credentialsPlayServicesAuth = "1.5.0"
+googleid = "1.1.1"
+firebaseFirestore = "25.1.2"
+
+coilCompose = "x.y.z"
+coilComposeVersion = "2.7.0"
+
+
+pagingVersion = "3.3.6"
+mobileads = "7.12.3"
 
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationComposeVersion" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingCommon" }
+androidx-paging-compose-v340rc01 = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-compose-v240 = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
@@ -51,6 +71,15 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid"}
 osmdroid-pack = { module = "com.github.mkergall:osmbonuspack", version.ref = "osmdroidBonusPack"}
 serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationVersion"}
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
+
+androidx-paging = {group = "androidx.paging", name = "paging-compose", version.ref = "pagingVersion"}
+androidx-paging-runtime = {group = "androidx.paging", name = "paging-runtime", version.ref = "pagingVersion"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -61,4 +90,5 @@ kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 
 serializationplugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationPlugin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 

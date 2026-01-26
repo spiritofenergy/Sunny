@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kodex.sunny.custom_ui.db.MainDb
+import com.kodex.sunny.custom.db.MainDb
 import com.kodex.sunny.location.LocationDataSharer
 import com.kodex.sunny.main_screen.tracker.data.TrackData
 import com.kodex.sunny.utils.LOCATION_UPDATE_INTERVAL

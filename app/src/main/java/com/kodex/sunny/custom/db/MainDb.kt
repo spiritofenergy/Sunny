@@ -1,4 +1,4 @@
-package com.kodex.sunny.custom_ui.db
+package com.kodex.sunny.custom.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

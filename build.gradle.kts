@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.kotlin.ksp) apply false
     alias(libs.plugins.serializationplugin) apply false
     alias(libs.plugins.hilt.plugin) apply false
+    alias(libs.plugins.google.gms.google.services) apply false
 }

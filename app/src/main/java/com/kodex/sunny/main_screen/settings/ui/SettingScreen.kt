@@ -1,6 +1,5 @@
 package com.kodex.gpstracker.main_screen.settings.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,17 +14,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.kodex.sunny.R
-import com.kodex.sunny.custom_ui.CustomDropDownMenu
+import com.kodex.sunny.custom.CustomDropDownMenu
 import com.kodex.sunny.main_screen.settings.data.ColorPickerData
 import com.kodex.sunny.main_screen.settings.ui.ColorPickerItem
 

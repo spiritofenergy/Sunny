@@ -1,4 +1,4 @@
-package com.kodex.sunny.custom_ui
+package com.kodex.sunny.custom
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.kodex.sunny.custom_ui.RoundedCornerText
 import com.kodex.sunny.location.data.MapData
 import com.kodex.sunny.R
 import com.kodex.sunny.main_screen.home.map_utils.initMyLocationOverlay

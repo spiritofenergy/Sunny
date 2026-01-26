@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category_arrays">
+        <item>ПАРК</item>
+        <item>ОТДЫХ</item>
+        <item>ПИТАНИЕ</item>
+        <item>ЗДОРОВЬЕ</item>
+        <item>СОТРУДНИКИ</item>
+        <item>БРОНИРОВАНИЕ</item>
+    </string-array>
+    <string-array name="order_by">
+        <item>Title</item>
+        <item>Price</item>
+    </string-array>
+</resources>

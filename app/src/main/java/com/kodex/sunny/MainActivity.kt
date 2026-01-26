@@ -14,10 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.kodex.gpstracker.main_screen.settings.ui.SettingScreen
+import com.kodex.gpstracker.main_screen.tracker.ui.TrackerScreen
+import com.kodex.sunny.mainScreen.MenuScreen
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
 import com.kodex.sunny.main_screen.button_bar.ui.ButtonMenu
+import com.kodex.sunny.main_screen.home.data.DetailsNavObject
 import com.kodex.sunny.main_screen.home.data.HomeNavData
+import com.kodex.sunny.main_screen.home.data.HomeScreenDataObject
 import com.kodex.sunny.main_screen.home.ui.HomeScreen
 import com.kodex.sunny.main_screen.login.data.LoginNavData
 import com.kodex.sunny.main_screen.login.ui.LoginScreen
@@ -25,13 +30,17 @@ import com.kodex.sunny.main_screen.map.data.MapNavData
 import com.kodex.sunny.main_screen.map.ui.MapScreen
 import com.kodex.sunny.main_screen.settings.data.SettingNavData
 import com.kodex.sunny.main_screen.tracker.data.TrackerNavData
-import com.kodex.sunny.main_screen.tracker.ui.TrackerScreen
 import com.kodex.sunny.ui.theme.SunnyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.config.Configuration
+import javax.inject.Inject
+import kotlin.toString
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+ //   @Inject
+  //  lateinit var yandexAdsManager: YandexAdsManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,7 +65,6 @@ class MainActivity : ComponentActivity() {
                                     ButtonMenuItem.Settings.title -> navController.navigate(SettingNavData)
                                     ButtonMenuItem.Map.title -> navController.navigate(MapNavData)
                                 }
-
                             }
                         }) {
                             innerPadding ->
@@ -66,20 +74,38 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding)
                         ) {
 
-                            composable<HomeNavData> {
-                                HomeScreen()
+                            composable<HomeNavData> { navEntry ->
+                                val navData = navEntry.toRoute<HomeScreenDataObject>()
+                                MenuScreen (
+                                    navData = navData,
+                                    onBookClick = {bk ->
+                                        //  yandexAdsManager.showAd(this@MainActivity){
+                                        navController.navigate(
+                                            DetailsNavObject(
+                                                bookId = bk.key,
+                                                title = bk.title,
+                                                description = bk.description,
+                                                price = bk.price.toString(),
+                                                categoryIndex = bk.categoryIndex,
+                                                imageUrl = bk.imageUrl,
+                                                author = bk.author,
+                                                timestamp = bk.timestamp
+                                            )
+                                        )
+                                        //      }
+
+
+                                    }
+                                )
                               //  navController.navigate(SettingNavData )
                             }
-
                             composable<SettingNavData> {
                                 SettingScreen()
                             }
-
                             composable<LoginNavData> {
                                 LoginScreen()
+
                             }
-
-
                             composable<TrackerNavData> {
                                 TrackerScreen()
                             }
