@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.serializationplugin)
+    alias(libs.plugins.hilt.plugin)
     id("kotlin-kapt")
 }
 
@@ -55,6 +56,8 @@ dependencies {
     implementation(libs.osmdroid.pack)
 
     implementation(libs.androidx.room.ktx)
+   // implementation(libs.firebase.auth.ktx)
+  //  implementation(libs.firebase.firestore.ktx)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.hilt.android)
@@ -82,4 +85,17 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation(libs.play.services.location)
+
+   // implementation(libs.firebase.auth)
+   // implementation(libs.firebase.firestore)
+   // implementation(libs.firebase.auth.ktx)
+
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.v240)
+  //  implementation(libs.coil.kt)
+   // implementation(libs.coil.video)
 }
+
+

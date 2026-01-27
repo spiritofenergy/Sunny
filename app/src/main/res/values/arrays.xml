@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category_arrays">
+        <item>Meals</item>
+        <item>Swimming</item>
+        <item>Entertainment</item>
+        <item>Treatment</item>
+        <item>Excursions</item>
+        <item>Booking</item>
+    </string-array>
+</resources>

@@ -17,8 +17,28 @@ roomKtx = "2.8.4"
 serializationPlugin = "2.3.0"
 serializationVersion = "1.9.0"
 navigationCompose = "2.8.5"
+playServiceLocation = "21.3.0"
+firebaseAuthKtx = "24.0.1"
+coilCompose = "x.y.z"
+coilComposeVersion = "2.7.0"
+firebaseFirestoreKtx = "26.1.0"
+
+firebaseAuth = "24.0.1"
+firebaseFirestore = "25.1.2"
+googleGmsGoogleServices = "4.4.2"
 
 [libraries]
+
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-compose-v240 = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
+#coil-kt = { module = "io.coil-kt:coil-kt", version.ref = "coilCompose" }
+#coil-video = { module = "io.coil-kt:coil-video", version.ref = "coilCompose" }
+
+#firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+#firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+
+#firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationComposeVersion" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
@@ -43,6 +63,8 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServiceLocation"}
+
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid"}
 osmdroid-pack = { module = "com.github.mkergall:osmbonuspack", version.ref = "osmdroidBonusPack"}
 serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationVersion"}
@@ -53,6 +75,8 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 
 serializationplugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationPlugin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
