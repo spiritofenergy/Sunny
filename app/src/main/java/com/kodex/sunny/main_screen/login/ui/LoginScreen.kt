@@ -214,37 +214,7 @@ fun StudyAppHeader(
 
 }
 
-@Composable
-fun MainNavButtons() {
-    Row(
-        modifier = Modifier.padding(horizontal = 5.dp)
-    ) {
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 5.dp),
-        ) {
-            Text(text = "Уроки")
-        }
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 5.dp)
-        ) {
-            Text(text = "Тесты")
-        }
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 5.dp)
-        ) {
-            Text(text = "Практика")
-        }
-    }
-}
+
 
 
 @Composable
@@ -256,7 +226,7 @@ private fun StudyAppHeaderPreview() {
 @Composable
 @Preview(showBackground = true)
 fun ShowMainNavButtons() {
-    MainNavButtons()
+
 
 }
 

@@ -17,4 +17,23 @@
     <string name="home">Home</string>
     <string name="tracks">Tracks</string>
     <string name="settings">Settings</string>
+
+
+
+    <string name="reset_password_massage" translatable="false">Зайдите в свой почтовый ящик и пройдите по ссылке для ввода пароля.</string>
+    <string name="remind_password" translatable="false">Напомнить пароль</string>
+    <!--LoginScreen -->
+    <string name="authorization" translatable="false">Авторизация</string>
+    <!-- -->
+    <string name="faves" translatable="false">Избранное</string>
+    <string name="park" translatable="false">Парк</string>
+    <string name="food" translatable="false">Еда</string>
+    <string name="health" translatable="false">Здоровье</string>
+    <string name="sunny" translatable="false">Отдых</string>
+    <string name="booking" translatable="false">Bookong</string>
+    <!-- -->
+    <string name= "empty_list" translatable="false">Лист пустой</string>
+    <!-- DrawerBody -->
+    <string name= "all" >Все</string>
+
 </resources>

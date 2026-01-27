@@ -21,6 +21,7 @@ import com.kodex.sunny.main_screen.home.data.HomeNavData
 import com.kodex.sunny.main_screen.home.ui.HomeScreen
 import com.kodex.sunny.main_screen.login.data.LoginNavData
 import com.kodex.sunny.main_screen.login.ui.LoginScreen
+import com.kodex.sunny.main_screen.main.MainScreen
 import com.kodex.sunny.main_screen.map.data.MapNavData
 import com.kodex.sunny.main_screen.map.ui.MapScreen
 import com.kodex.sunny.main_screen.settings.data.SettingNavData
@@ -67,7 +68,7 @@ class MainActivity : ComponentActivity() {
                         ) {
 
                             composable<HomeNavData> {
-                                HomeScreen()
+                                MainScreen()
                               //  navController.navigate(SettingNavData )
                             }
 

@@ -6,8 +6,8 @@ import java.text.SimpleDateFormat
 
 @SuppressLint("ConstantLocale","SimpleDateFormat")
 object TimeUtils {
-  private  val timerFormatter = SimpleDateFormat("HH:mm:ss:SS")
-  private  val trackNameFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SS")
+  private  val timerFormatter = SimpleDateFormat("mm:ss")
+  private  val trackNameFormatter = SimpleDateFormat("dd/MM/yyyy mm:ss")
 
     fun getTimerTime(startTimerInMillis: Long): String {
         val elapsedTimeInMillis = System.currentTimeMillis() - startTimerInMillis
