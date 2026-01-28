@@ -1,25 +1,16 @@
 package com.kodex.sunny.main_screen.login.ui
 
 import android.util.Log
-import android.util.Patterns.EMAIL_ADDRESS
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,205 +19,177 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.kodex.sunny.R
 import com.kodex.sunny.ui.theme.ButtonColor
+import com.kodex.sunny.ui.theme.ButtonColorDark
+
 
 @Composable
 fun LoginScreen() {
+    val auth = remember {
+        Firebase.auth
+    }
+    var errorState by remember { mutableStateOf("") }
+    var emailState by remember { mutableStateOf("") }
+    var passwordState by remember { mutableStateOf("") }
 
-    var userEmail by remember { mutableStateOf("") }
-    var isEmailFormatValid by remember { mutableStateOf(true) }
-    var validationMessage by remember { mutableStateOf("") }
-
-    val testEmail = "email@domain.com"
-
-    Column(modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
-        StudyAppHeader(
-            title = "Sunny",
-            subTitle = "Войти в аккаунт",
-            description = "Введите почту чтобы войти"
-        )
-
-        Spacer(Modifier.height(40.dp))
-        CheckEmailField(
-
-            email = userEmail,
-            isEmailValid = isEmailFormatValid,
-            onEmailChange = {
-                userEmail = it
-                isEmailFormatValid = EMAIL_ADDRESS.matcher(it).matches()
-                validationMessage = if (!isEmailFormatValid) {
-                    "Некорректный email"
-                } else ""
+   /* val currentUser = auth.currentUser
+    if (currentUser != null) {
+        signUp(
+            auth, currentUser.email ?: "", passwordState,
+            onSignInSuccess = {
+                Log.d("TAG", "signIn: success3")
             },
-
-            onClearClicked = {
-                userEmail= ""
-                isEmailFormatValid = true
-                validationMessage = ""
+            onSignInFailure = { error ->
+                errorState = error
+                Log.d("TAG", "signIn: failure3: $error")
             }
         )
-        Spacer(Modifier.height(30.dp))
-        PrimaryButton(
-            text = "Продолжить",
-            onRegisterClick = {it: String ->
-                validationMessage =
-                    if(userEmail.isEmpty()|| !isEmailFormatValid) {
-                        "Некорректный email"
-                    }else if (userEmail == testEmail){
-                        "Такая почта уже существует"
-                    }else {
-                        "Регистрация успешна"
-                    }
-                Log.i("!!!", "PrimaryButton: $it")
-            }
-        )
-        Spacer(Modifier.height(30.dp))
-        Text(
-            text = validationMessage,
-            style = MaterialTheme.typography.bodyLarge,
-            color = if (validationMessage.contains("успешна")) Color.DarkGray else Color.Red,
-            modifier = Modifier.alpha(if (validationMessage.isNotEmpty() && isEmailFormatValid) 1f else 0f)
-        )
-    }
-}
-@Composable
-fun CheckEmailField(
-    email: String,
-    isEmailValid: Boolean,
-    onEmailChange: (String) -> Unit,
-    onClearClicked: () -> Unit,
+    }*/
 
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .background(ButtonColorDark)
     ) {
+        Image(
+            painter = painterResource(
+                id = R.drawable.way
+            ),
+            contentDescription = "BG",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            alpha = 0.3f
+        )
 
-    OutlinedTextField(
-        value = email,
-        onValueChange = {
-            onEmailChange(it)
-            //         textState = it
-            //           errorState = if (EMAIL_ADDRESS.matcher(it).matches()) "" else "Некорректный email"
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(46.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        },
-        shape = RoundedCornerShape(10.dp),
-
-        textStyle = MaterialTheme.typography.labelMedium,
-        placeholder = {
-            Text(
-                text = "email@domain.com",
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.Gray
+            Image(
+                painter = painterResource(id = R.drawable.icon_two),
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .height(250.dp)
+                    .padding(bottom = 10.dp)
             )
-        },
-        singleLine = true,
-        label = {
             Text(
-                text = if (isEmailValid) "email@domain.com" else "Некорректный ввод",
-                style = MaterialTheme.typography.labelMedium
+                text = "Sunny",
+                color = Color.White,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif
             )
-        },
-        modifier = Modifier
-            .height(40.dp)
-            .padding(30.dp, 0.dp)
-            .fillMaxWidth(),
-
-        trailingIcon = {
-            IconButton(
-                onClick = {
-                    onClearClicked()
-                    //               textState = ""
-                    //              errorState = ""
-                },
+            Spacer(modifier = Modifier.height(40.dp))
+            RoundedCornerTextField(
+                text = emailState,
+                label = "Логин:",
+                isPassword = false
+            ) { emailState = it }
+            Spacer(modifier = Modifier.height(10.dp))
+            RoundedCornerTextField(
+                text = passwordState,
+                label = "Пароль:",
+                isPassword = true
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Clear,
-                    contentDescription = "Иконка очистки поля"
-
-                )
+                passwordState = it
             }
-        },
-        isError = !isEmailValid && email.isNotEmpty(),
 
-        )
-}
+            Spacer(modifier = Modifier.height(10.dp))
+            if (errorState.isNotEmpty()) Text(
+                text = errorState,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontFamily = FontFamily.Serif
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            PrimaryButton(
+                text = "Войти",
+                onRegisterClick = {
+                    Log.d("TAG", "LoginScreen: $it")
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = ButtonColor)
+            )
 
+            Spacer(modifier = Modifier.height(10.dp))
+            PrimaryButton(
+                text = "Регистрация",
+                onRegisterClick = {
+                    signUp(
+                        auth, emailState, passwordState,
+                        {
+                            Log.d("TAG", "signIn: success1")
+                        },
+                        { error ->
+                            errorState = error
+                            Log.d("TAG", "signIn: failure1: $error")
+                        }
+                    )
+                },
+                )
+            Spacer(modifier = Modifier.height(10.dp))
 
-@Composable
-fun PrimaryButton(
-    text: String,
-    onRegisterClick: (String) -> Unit,
-    colors: ButtonColors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
-    ) {
-    Button(
-        shape = RoundedCornerShape(10.dp),
-        colors = colors,
-        onClick = {
-            onRegisterClick(text)
-        },
-
-        modifier = Modifier
-            .height(45.dp)
-            .padding(30.dp, 0.dp)
-            .fillMaxWidth(),
-
-
-    ) {
-        Text(
-            text,
-            style = MaterialTheme.typography.labelMedium,
-            fontSize = 16.sp
-        )
+            LoginButton(
+                text = "Регистрация",
+                onClick = {
+                    signUp(
+                        auth, emailState, passwordState,
+                        onSignInSuccess = {
+                            Log.d("TAG", "signIn: success2")
+                        },
+                        onSignInFailure = { error ->
+                            errorState = error
+                            Log.d("TAG", "signIn: failure2: $error")
+                        }
+                    )
+                }
+            )
+        }
     }
 }
 
-@Composable
-fun StudyAppHeader(
-    title: String = "",
-    subTitle: String = "",
-    description: String = "",
+fun signUp(
+    auth: FirebaseAuth,
+    email: String,
+    password: String,
+    onSignInSuccess: () -> Unit,
+    onSignInFailure: (String) -> Unit
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = title ,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            modifier = Modifier.padding(50.dp)
 
-        )
-        Text(
-            text = subTitle,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-
-        )
-        Text(
-            text = description,
-            fontSize = 18.sp
-
-        )
+    if (email.isEmpty() || password.isEmpty()) {
+        onSignInFailure("Email or password is empty")
+        return
     }
-
+    auth.createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) onSignInSuccess()
+        }
+        .addOnFailureListener { it ->
+            onSignInFailure(it.message ?: "SignIn Error")
+            Log.d("TAG", "signIn: ${it.message}")
+        }
 }
-
-
-
 
 @Composable
 @Preview(showBackground = true)
-private fun StudyAppHeaderPreview() {
-    StudyAppHeader()
+fun LoginScreenPreview() {
+    LoginScreen(
+     )
 }
 
-@Composable
-@Preview(showBackground = true)
-fun ShowMainNavButtons() {
 
-
-}
 
