@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.serializationplugin)
     alias(libs.plugins.hilt.plugin)
     id("kotlin-kapt")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -56,8 +57,12 @@ dependencies {
     implementation(libs.osmdroid.pack)
 
     implementation(libs.androidx.room.ktx)
-   // implementation(libs.firebase.auth.ktx)
-  //  implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    // implementation(libs.firebase.common.ktx)
+    // implementation(libs.firebase.auth.ktx)
+    // implementation(libs.firebase.firestore.ktx)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.hilt.android)
@@ -87,9 +92,10 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.play.services.location)
 
-   // implementation(libs.firebase.auth)
-   // implementation(libs.firebase.firestore)
-   // implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(platform(libs.firebase.bom))
+    //implementation(libs.firebase.auth.ktx)
 
 
     implementation(libs.coil.compose)
