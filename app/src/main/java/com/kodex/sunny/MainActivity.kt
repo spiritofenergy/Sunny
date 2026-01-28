@@ -14,17 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+import androidx.navigation.toRoute
 import com.kodex.gpstracker.main_screen.settings.ui.SettingScreen
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
 import com.kodex.sunny.main_screen.button_bar.ui.ButtonMenu
-import com.kodex.sunny.main_screen.home.data.HomeNavData
-import com.kodex.sunny.main_screen.home.ui.HomeScreen
+import com.kodex.sunny.main_screen.home.data.MainScreenDataObject
 import com.kodex.sunny.main_screen.login.data.LoginNavData
 import com.kodex.sunny.main_screen.login.ui.LoginScreen
-import com.kodex.sunny.main_screen.main.MainScreen
+import com.kodex.sunny.main_screen.home.ui.MainScreen
 import com.kodex.sunny.main_screen.map.data.MapNavData
 import com.kodex.sunny.main_screen.map.ui.MapScreen
 import com.kodex.sunny.main_screen.settings.data.SettingNavData
@@ -54,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
                                 savedInstanceState.value = savedInstanceTitle
                                 when(savedInstanceTitle){
-                                    ButtonMenuItem.Home.title -> navController.navigate(HomeNavData)
+                                    ButtonMenuItem.Home.title -> navController.navigate(MainScreenDataObject)
                                     ButtonMenuItem.Track.title -> navController.navigate(TrackerNavData)
                                     ButtonMenuItem.Login.title -> navController.navigate(LoginNavData)
                                     ButtonMenuItem.Settings.title -> navController.navigate(SettingNavData)
@@ -69,9 +66,10 @@ class MainActivity : ComponentActivity() {
                             startDestination = LoginNavData,
                             modifier = Modifier.padding(innerPadding)
                         ) {
-                            composable<HomeNavData> {
+                            composable<MainScreenDataObject> {navEntry ->
+                                val navData = navEntry.toRoute<MainScreenDataObject>()
                                 MainScreen()
-                              //  navController.navigate(SettingNavData )
+                               // navController.navigate(SettingNavData )
                             }
 
                             composable<SettingNavData> {
@@ -79,7 +77,10 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable<LoginNavData> {
-                                LoginScreen()
+                                LoginScreen { navData ->
+                                    navController.navigate(navData)
+                                }
+
                             }
 
 

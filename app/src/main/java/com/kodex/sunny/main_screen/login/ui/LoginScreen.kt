@@ -34,13 +34,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.kodex.sunny.R
 import com.kodex.sunny.custom_ui.Progress
+import com.kodex.sunny.main_screen.home.data.MainScreenDataObject
 import com.kodex.sunny.ui.theme.ButtonColorDark
 import com.kodex.sunny.utils.ProgressBar
 import kotlinx.coroutines.delay
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onNavigateToMainScreen: (MainScreenDataObject) -> Unit = {}
+) {
     val auth = remember {
         Firebase.auth
     }
@@ -48,21 +51,6 @@ fun LoginScreen() {
     var emailState by remember { mutableStateOf("") }
     var passwordState by remember { mutableStateOf("") }
     var successState by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
-    /* val currentUser = auth.currentUser
-     if (currentUser != null) {
-         signUp(
-             auth, currentUser.email ?: "", passwordState,
-             onSignInSuccess = {
-                 Log.d("TAG", "signIn: success3")
-             },
-             onSignInFailure = { error ->
-                 errorState = error
-                 Log.d("TAG", "signIn: failure3: $error")
-             }
-         )
-     }*/
 
     Box(
         modifier = Modifier
@@ -129,7 +117,8 @@ fun LoginScreen() {
                 onRegisterClick = {
                     signIn(
                         auth, emailState, passwordState,
-                        onSignInSuccess = {
+                        onSignInSuccess = { navData ->
+                            onNavigateToMainScreen(navData)
                             successState = true
                             errorState = "We invite you to the sunny city"
                             Log.d("TAG", "LoginScreen: $it")
@@ -148,7 +137,8 @@ fun LoginScreen() {
                 onRegisterClick = {
                     signUp(
                         auth, emailState, passwordState,
-                        {
+                        { navData ->
+                            onNavigateToMainScreen(navData)
                             successState = true
                             errorState = "We invite you to the sunny city"
                             Log.d("TAG", "signIn: success1")
@@ -179,7 +169,7 @@ fun signUp(
     auth: FirebaseAuth,
     email: String,
     password: String,
-    onSignInSuccess: () -> Unit,
+    onSignInSuccess: (MainScreenDataObject) -> Unit,
     onSignInFailure: (String) -> Unit
 ) {
 
@@ -189,7 +179,12 @@ fun signUp(
     }
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
-            if (task.isSuccessful) onSignInSuccess()
+            if (task.isSuccessful) onSignInSuccess(
+                MainScreenDataObject(
+                    uid = auth.currentUser?.uid ?: "",
+                    email = auth.currentUser?.email ?: ""
+                )
+            )
         }
         .addOnFailureListener { it ->
             onSignInFailure(it.message ?: "SignIn Error")
@@ -202,7 +197,7 @@ fun signIn(
     auth: FirebaseAuth,
     email: String,
     password: String,
-    onSignInSuccess: () -> Unit,
+    onSignInSuccess: (MainScreenDataObject) -> Unit,
     onSignInFailure: (String) -> Unit
 ) {
 
@@ -212,7 +207,12 @@ fun signIn(
     }
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
-            if (task.isSuccessful) onSignInSuccess()
+            if (task.isSuccessful) onSignInSuccess(
+                MainScreenDataObject(
+                    uid = auth.currentUser?.uid ?: "",
+                    email = auth.currentUser?.email ?: ""
+                )
+            )
         }
         .addOnFailureListener { it ->
             onSignInFailure(it.message ?: "SignIn Error")
