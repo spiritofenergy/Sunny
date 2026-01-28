@@ -40,7 +40,7 @@ fun DrawerHeader(
 
         ){
             Image(modifier = Modifier.size(90.dp),
-                painter = painterResource(id = R.drawable.i),
+                painter = painterResource(id = R.drawable.icon_two),
                 contentDescription = "ИСКРА"
             )
             Spacer(modifier = Modifier.height(10.dp))

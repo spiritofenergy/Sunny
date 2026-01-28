@@ -1,5 +1,6 @@
 package com.kodex.sunny.drawer_menu
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,9 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import com.kodex.sunny.R
 import com.kodex.sunny.ui.theme.ButtonColorDark
 import com.kodex.sunny.ui.theme.DarkTransparentBlue
@@ -47,10 +51,10 @@ fun DrawerBody(
         mutableStateOf(false)
     }
     LaunchedEffect(Unit) {
-       /* isAdmin { isAdmin ->
+        isAdmin { isAdmin ->
             isAdminState.value = isAdmin
             onAdmin(isAdmin)
-        }*/
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()
@@ -118,18 +122,19 @@ fun DrawerBody(
                 ) {
                 Text(text = "Добавить")
             }
+
         }
     }
 }
-/*
+
 fun isAdmin(onAdmin: (Boolean)-> Unit){
     val uid = Firebase.auth.currentUser!!.uid
     Firebase.firestore.collection("admin")
         .document(uid).get().addOnSuccessListener{
             onAdmin(it.get("isAdmin") as Boolean)
-            Log.d("MyLog", "isAdmin: ${it.get("isAdmin")}")
+             Log.d("MyLog", "isAdmin: ${it.get("isAdmin")}")
         }
-}*/
+}
 @Composable
 @Preview
 fun DrawerBodyPreview() {

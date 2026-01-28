@@ -16,6 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.kodex.gpstracker.main_screen.settings.ui.SettingScreen
+import com.kodex.sunny.addScreen.AddBookScreen
+import com.kodex.sunny.addScreen.data.AddScreenObject
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
 import com.kodex.sunny.main_screen.button_bar.ui.ButtonMenu
 import com.kodex.sunny.main_screen.home.data.MainScreenDataObject
@@ -63,13 +65,16 @@ class MainActivity : ComponentActivity() {
                             innerPadding ->
                         NavHost(
                             navController = navController,
-                            startDestination = LoginNavData,
+                            startDestination = AddScreenObject,
                             modifier = Modifier.padding(innerPadding)
                         ) {
                             composable<MainScreenDataObject> {navEntry ->
                                 val navData = navEntry.toRoute<MainScreenDataObject>()
-                                MainScreen()
+                                MainScreen(navData)
                                // navController.navigate(SettingNavData )
+                            }
+                            composable<AddScreenObject> { navEntry ->
+                                AddBookScreen()
                             }
 
                             composable<SettingNavData> {
@@ -80,7 +85,6 @@ class MainActivity : ComponentActivity() {
                                 LoginScreen { navData ->
                                     navController.navigate(navData)
                                 }
-
                             }
 
 

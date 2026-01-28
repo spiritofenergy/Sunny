@@ -48,8 +48,8 @@ fun LoginScreen(
         Firebase.auth
     }
     var errorState by remember { mutableStateOf("") }
-    var emailState by remember { mutableStateOf("") }
-    var passwordState by remember { mutableStateOf("") }
+    var emailState by remember { mutableStateOf("nigmatullov@mail.ru") }
+    var passwordState by remember { mutableStateOf("test2401") }
     var successState by remember { mutableStateOf(false) }
 
     Box(
@@ -59,7 +59,7 @@ fun LoginScreen(
     ) {
         Image(
             painter = painterResource(
-                id = R.drawable.way
+                id = R.drawable.bich_1
             ),
             contentDescription = "BG",
             modifier = Modifier.fillMaxSize(),
@@ -79,8 +79,7 @@ fun LoginScreen(
                 painter = painterResource(id = R.drawable.icon_two),
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .height(250.dp)
-                    .padding(bottom = 10.dp)
+                    .padding(bottom = 50.dp)
             )
             Text(
                 text = "Sunny",

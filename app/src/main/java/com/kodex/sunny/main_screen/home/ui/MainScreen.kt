@@ -16,11 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.kodex.sunny.drawer_menu.DrawerBody
 import com.kodex.sunny.drawer_menu.DrawerHeader
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
+import com.kodex.sunny.main_screen.home.data.MainScreenDataObject
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    navData: MainScreenDataObject
+) {
     val driverState = rememberDrawerState(DrawerValue.Open)
     val savedInstanceState = remember{
         mutableStateOf(ButtonMenuItem.Home.title)
@@ -30,7 +33,7 @@ fun MainScreen() {
         modifier = Modifier.fillMaxWidth(),
         drawerContent = {
             Column(Modifier.fillMaxWidth(0.7f)) {
-                DrawerHeader()
+                DrawerHeader(navData.email)
                 DrawerBody(
                     onAdmin = {
 
@@ -56,6 +59,6 @@ fun MainScreen() {
 @Composable
 @Preview
 fun MainScreenPreview() {
-    MainScreen()
+    MainScreen(navData = MainScreenDataObject())
 }
 
