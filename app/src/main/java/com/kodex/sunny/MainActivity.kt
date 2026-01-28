@@ -14,6 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.kodex.gpstracker.main_screen.settings.ui.SettingScreen
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
 import com.kodex.sunny.main_screen.button_bar.ui.ButtonMenu
@@ -34,6 +37,7 @@ import org.osmdroid.config.Configuration
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setUpOSM(this)
@@ -42,7 +46,6 @@ class MainActivity : ComponentActivity() {
             val savedInstanceState = remember{
                 mutableStateOf(ButtonMenuItem.Home.title)
             }
-
             SunnyTheme {
 
                     Scaffold(modifier = Modifier.fillMaxSize(),
@@ -63,10 +66,9 @@ class MainActivity : ComponentActivity() {
                             innerPadding ->
                         NavHost(
                             navController = navController,
-                            startDestination = HomeNavData,
+                            startDestination = LoginNavData,
                             modifier = Modifier.padding(innerPadding)
                         ) {
-
                             composable<HomeNavData> {
                                 MainScreen()
                               //  navController.navigate(SettingNavData )

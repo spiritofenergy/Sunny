@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kodex.sunny.R
 import com.kodex.sunny.ui.theme.ButtonColor
@@ -77,5 +78,15 @@ fun RoundedCornerTextField(
                 }
             }
         }
+    )
+}
+@Composable
+@Preview
+fun ShowTextField(){
+    RoundedCornerTextField(
+        text = "",
+        label = "Email",
+        onValueChange = {}
+
     )
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "700265641152",
+    "project_id": "sunny-bc066",
+    "storage_bucket": "sunny-bc066.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700265641152:android:d0ecd702ce4cd51ed6a925",
+        "android_client_info": {
+          "package_name": "com.kodex.sony"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJStGx9sHsZt_PBFTEeAzet2eng0c5JzY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
