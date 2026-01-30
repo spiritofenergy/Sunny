@@ -1,6 +1,7 @@
 package com.kodex.sunny.addScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kodex.sunny.R
+import com.kodex.sunny.ui.theme.ButtonColor
 
 @Composable
 fun RoundedCornerDropDownMenu(
@@ -34,17 +37,22 @@ fun RoundedCornerDropDownMenu(
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .border(
+                width = 2.dp,
+                color = ButtonColor,
+                shape = RoundedCornerShape(20.dp)
+            )
             .clip(RoundedCornerShape(20.dp))
             .background(Color.White)
             .clickable {
                 expanded.value = true
             }
             .padding(20.dp)
-        /*    .border(
-                width = 2.dp,
-                color = ButtonColor,
-                shape = RoundedCornerShape(20.dp)*/
 
+            .background(Color.White)
+            .clickable {
+                expanded.value = true
+            }
 
     ) {
         Text(text = selectedOption.value)
@@ -65,4 +73,12 @@ fun RoundedCornerDropDownMenu(
             }
         }
     }
+}
+@Composable
+@Preview
+fun RoundedCornerDropDownMenuPreview() {
+    RoundedCornerDropDownMenu(
+        defCategory = 0,
+        onOptionSelected = {}
+    )
 }

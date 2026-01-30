@@ -40,7 +40,7 @@ import com.kodex.sunny.utils.Categories
 @Composable
 fun DrawerBody(
    // viewModel: MainScreenViewModel = hiltViewModel(),
-    onAdmin: (Boolean) -> Unit,
+   // onAdmin: (Boolean) -> Unit,
     onAdminClick: () -> Unit = {},
     onAddBookClick: () -> Unit = {},
     onCategoryClick: (Int) -> Unit = {}
@@ -53,7 +53,7 @@ fun DrawerBody(
     LaunchedEffect(Unit) {
         isAdmin { isAdmin ->
             isAdminState.value = isAdmin
-            onAdmin(isAdmin)
+          //  onAdmin(isAdmin)
         }
     }
 
@@ -95,8 +95,8 @@ fun DrawerBody(
 
             if (isAdminState.value) Button(
                 onClick = {
-               // isAdmin{ }
-                onAdminClick()
+                    onAdminClick()
+                    isAdmin{ }
             },
                modifier = Modifier
                 .fillMaxWidth()
@@ -109,7 +109,7 @@ fun DrawerBody(
             }
             Button(
                 onClick = {
-               // isAdmin{ }
+                isAdmin{ }
                 onAdminClick()
                     onAddBookClick
             },
@@ -138,6 +138,9 @@ fun isAdmin(onAdmin: (Boolean)-> Unit){
 @Composable
 @Preview
 fun DrawerBodyPreview() {
-    DrawerBody(onAdmin = {})
+    DrawerBody(
+
+      //  onAdmin = {}
+    )
 }
 

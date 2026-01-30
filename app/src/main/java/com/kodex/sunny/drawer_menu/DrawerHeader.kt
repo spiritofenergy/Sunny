@@ -39,7 +39,7 @@ fun DrawerHeader(
             verticalArrangement = Arrangement.Center
 
         ){
-            Image(modifier = Modifier.size(90.dp),
+            Image(modifier = Modifier.size(120.dp),
                 painter = painterResource(id = R.drawable.icon_two),
                 contentDescription = "ИСКРА"
             )

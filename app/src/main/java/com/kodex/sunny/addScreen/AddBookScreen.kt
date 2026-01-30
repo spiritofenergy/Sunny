@@ -1,7 +1,8 @@
 package com.kodex.sunny.addScreen
 
+import android.content.ContentResolver
 import android.net.Uri
-import android.widget.Toast
+import android.util.Base64
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -16,8 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,105 +31,167 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.firestore.FirebaseFirestore
+import com.kodex.spark.ui.addScreen.data.Book
 import com.kodex.sunny.R
-import com.kodex.sunny.main_screen.home.data.MainScreenDataObject
 import com.kodex.sunny.main_screen.login.ui.LoginButton
 import com.kodex.sunny.main_screen.login.ui.RoundedCornerTextField
-import com.kodex.sunny.ui.theme.BoxFilter
-import com.kodex.sunny.utils.ImageUtils
-import com.kodex.sunny.utils.toBitmap
+import com.kodex.sunny.ui.theme.ButtonColorDark
 
 
 @Composable
-fun AddBookScreen(
-) {
+fun AddBookScreen(function: () -> Boolean) {
     val title = remember { mutableStateOf("") }
     val description = remember { mutableStateOf("") }
     val prise = remember { mutableStateOf("") }
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
+    val cv = LocalContext.current.contentResolver
 
     val imageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ){ uri ->
+    ) { uri ->
         selectedImageUri.value = uri
     }
-    Image(
-        painter = painterResource(id = R.drawable.way),
-        contentDescription = "Logo",
-        modifier = Modifier.fillMaxSize(),
-        alpha = 0.5f,
-        contentScale = ContentScale.Crop
-
-    )
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(BoxFilter)
-    )
-
-    // Основной лист
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(ButtonColorDark)
     ) {
-        // Фото
         Image(
-            painter = rememberAsyncImagePainter(model = selectedImageUri.value),
-            contentDescription = "Selected Image",
+            painter = painterResource(id = R.drawable.way),
+            contentDescription = "Logo",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            alpha = 0.3f,
+        )
+        /*  Box(
             modifier = Modifier
-                .width(300.dp)
-                .height(400.dp)
-        )
-        Spacer(
-            modifier = Modifier.height(10.dp)
-        )
-        Text(
-            text = "Sunny",
-            color = Color.White,
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Serif
-        )
-        Spacer(modifier = Modifier.height(10.dp))
+                .fillMaxSize()
+                .background(BoxFilter)
+        )*/
 
-        RoundedCornerTextField(
-            text = title.value,
-            label = "Название:"
-        ) {}
-        Spacer(modifier = Modifier.height(10.dp))
+        // Основной лист
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Фото
+            Image(
+                painter = rememberAsyncImagePainter(model = selectedImageUri.value),
+                contentDescription = "Selected Image",
+                modifier = Modifier
+                    .width(300.dp)
+                    .height(200.dp)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Sunny",
+                color = Color.White,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            RoundedCornerDropDownMenu(
+                onOptionSelected = {
 
-        RoundedCornerTextField(
-            text = description.value,
-            label = "Краткое описание:",
-            singleLine = false,
-            maxLines = 5
-        ) {}
+                },
+                defCategory = 0
+            )
 
-        Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-        RoundedCornerTextField(
-            text = prise.value,
-            label = "Цена:"
-        ) {}
+            RoundedCornerTextField(
+                text = title.value,
+                label = "Название:"
+            ) {
+                title.value = it
+            }
+            Spacer(modifier = Modifier.height(10.dp))
 
-        Spacer(modifier = Modifier.height(10.dp))
+            RoundedCornerTextField(
+                text = description.value,
+                label = "Краткое описание:",
+                singleLine = false,
+                maxLines = 5
+            ) {
+                description.value = it
+            }
 
-        LoginButton(text = "Выбрать фото") {
-             imageLauncher.launch("image/*")
-        }
-        LoginButton(text = "Сохранить ") {
-            // viewModel.uploadBook(navData.copy(imageUrl = imageBase64.value))
+            Spacer(modifier = Modifier.height(10.dp))
 
+            RoundedCornerTextField(
+                text = prise.value,
+                label = "Цена:"
+            ) {
+                prise.value = it
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            LoginButton(text = "Выбрать фото") {
+                imageLauncher.launch("image/*")
+            }
+
+            LoginButton(text = "Save") {
+                saveBookToFirestore(
+                    FirebaseFirestore.getInstance(),
+                    Book(
+                        title = title.value,
+                        description = description.value,
+                        price = prise.value.toInt(),
+                        categoryIndex = 0,
+                        imageUrl = imageToBase64(
+                            selectedImageUri.value!!,
+                            cv)
+                        ),
+                    onSaved = {
+                        function()
+                    },
+                    onError = {
+                        function()
+                    }
+                    )
+                // viewModel.uploadBook(navData.copy(imageUrl = imageBase64.value))
+            }
         }
     }
 }
 
+    private fun saveBookToFirestore(
+        firestore: FirebaseFirestore,
+        book: Book,
+        onSaved: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val db = firestore.collection("books")
+        val key = db.document().id
+        db.document(key)
+            .set(book.copy(key = key))
+            .addOnSuccessListener { onSaved() }
+            .addOnFailureListener { onError(it.message ?: "Error") }
+    }
+
+    private fun imageToBase64(
+        uri: Uri,
+        contentResolver: ContentResolver
+    ): String {
+        val inputStream = contentResolver.openInputStream(uri)
+
+        val bytes = inputStream?.readBytes()
+        return bytes?.let {
+            Base64.encodeToString(it, Base64.DEFAULT)
+        } ?: ""
+    }
+
 @Composable
 @Preview
 fun AddBookScreenPreview() {
-    AddBookScreen()
+    /*AddBookScreen {
+        navController.popBackStack()
+    }*/
 }
 

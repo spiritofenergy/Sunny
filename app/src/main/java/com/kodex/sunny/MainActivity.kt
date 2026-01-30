@@ -42,67 +42,84 @@ class MainActivity : ComponentActivity() {
         setUpOSM(this)
         setContent {
             val navController = rememberNavController()
-            val savedInstanceState = remember{
+            val savedInstanceState = remember {
                 mutableStateOf(ButtonMenuItem.Home.title)
             }
             SunnyTheme {
 
-                    Scaffold(modifier = Modifier.fillMaxSize(),
-                        bottomBar = {
-                            ButtonMenu(savedInstanceState.value){savedInstanceTitle ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        ButtonMenu(savedInstanceState.value) { savedInstanceTitle ->
 
-                                savedInstanceState.value = savedInstanceTitle
-                                when(savedInstanceTitle){
-                                    ButtonMenuItem.Home.title -> navController.navigate(MainScreenDataObject)
-                                    ButtonMenuItem.Track.title -> navController.navigate(TrackerNavData)
-                                    ButtonMenuItem.Login.title -> navController.navigate(LoginNavData)
-                                    ButtonMenuItem.Settings.title -> navController.navigate(SettingNavData)
-                                    ButtonMenuItem.Map.title -> navController.navigate(MapNavData)
+                            savedInstanceState.value = savedInstanceTitle
+                            when (savedInstanceTitle) {
+                                ButtonMenuItem.Home.title -> navController.navigate(
+                                    MainScreenDataObject
+                                )
+
+                                ButtonMenuItem.Track.title -> navController.navigate(TrackerNavData)
+                                ButtonMenuItem.Login.title -> navController.navigate(LoginNavData)
+                                ButtonMenuItem.Settings.title -> navController.navigate(
+                                    SettingNavData
+                                )
+
+                                ButtonMenuItem.Map.title -> navController.navigate(MapNavData)
+                            }
+
+                        }
+                    }) { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = LoginNavData,
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+
+                        composable<MainScreenDataObject> { navEntry ->
+                            val navData = navEntry.toRoute<MainScreenDataObject>()
+                            MainScreen(
+                                navData,
+                                onAddBookClick = {
+                                    navController.navigate(AddScreenObject)
+                                },
+                                onAdminClick = {
+                                    navController.navigate(AddScreenObject)
                                 }
-
-                            }
-                        }) {
-                            innerPadding ->
-                        NavHost(
-                            navController = navController,
-                            startDestination = AddScreenObject,
-                            modifier = Modifier.padding(innerPadding)
-                        ) {
-                            composable<MainScreenDataObject> {navEntry ->
-                                val navData = navEntry.toRoute<MainScreenDataObject>()
-                                MainScreen(navData)
-                               // navController.navigate(SettingNavData )
-                            }
-                            composable<AddScreenObject> { navEntry ->
-                                AddBookScreen()
+                            )
+                        }
+                        composable<AddScreenObject> { navEntry ->
+                            AddBookScreen {
+                                navController.popBackStack()
                             }
 
-                            composable<SettingNavData> {
-                                SettingScreen()
-                            }
+                        }
 
-                            composable<LoginNavData> {
-                                LoginScreen { navData ->
-                                    navController.navigate(navData)
-                                }
-                            }
+                        composable<SettingNavData> {
+                            SettingScreen()
+                        }
 
-
-                            composable<TrackerNavData> {
-                                TrackerScreen()
-                            }
-                            composable<MapNavData> {
-                                MapScreen()
+                        composable<LoginNavData> {
+                            LoginScreen { navData ->
+                                navController.navigate(navData)
                             }
                         }
+
+
+                        composable<TrackerNavData> {
+                            TrackerScreen()
+                        }
+                        composable<MapNavData> {
+                            MapScreen()
+                        }
                     }
+                }
             }
         }
     }
 }
 
 
-private fun setUpOSM(context: Context){
+private fun setUpOSM(context: Context) {
     val config = Configuration.getInstance()
     config.load(context, context.getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
     config.userAgentValue = context.packageName
