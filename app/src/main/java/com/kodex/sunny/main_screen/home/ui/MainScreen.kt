@@ -20,6 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.kodex.spark.ui.addScreen.data.Favorite
@@ -30,6 +31,7 @@ import com.kodex.sunny.drawer_menu.DrawerBody
 import com.kodex.sunny.drawer_menu.DrawerHeader
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
 import com.kodex.sunny.main_screen.home.data.MainScreenDataObject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -49,7 +51,7 @@ fun MainScreen(
 
     val db = remember { Firebase.firestore }
     LaunchedEffect(Unit) {
-        getAllFavesBooks(db, navData.uid) { faves ->
+        getAllFavesIds(db, navData.uid) { faves ->
             getAllBooks(db, faves) { books ->
                 bookListState.value = books
             }
@@ -64,17 +66,30 @@ fun MainScreen(
             Column(Modifier.fillMaxWidth(0.7f)) {
                 DrawerHeader(navData.email)
                 DrawerBody(
+                    onFavesClick = {
+                        getAllFavesIds(db, navData.uid) { faves ->
+                            getAllFavesBooks(db, faves) { books ->
+                                bookListState.value = books
+                                    coroutineScope.launch { driverState.close() }
+                            }
+                        }
+                    },
+                    onHomeClick = {
+                      getAllFavesIds(db, navData.uid) { faves ->
+                            getAllBooks(db, faves) { books ->
+                                bookListState.value = books
+                            }
+                        }
+                    },
+
                     onAdmin = { isAdmin ->
                         isAdminState.value = isAdmin
                     },
                     onAddBookClick
 
-
                 ) {
                     coroutineScope.launch { driverState.close() }
                 }
-
-
             }
         }
     ) {
@@ -129,7 +144,7 @@ fun MainScreen(
     }
 }
 
-private fun getAllBooks(
+ fun getAllBooks(
     db: FirebaseFirestore,
     idsList: List<String>,
     onBooks: (List<Book>) -> Unit
@@ -153,6 +168,29 @@ private fun getAllBooks(
         }
 }
 private fun getAllFavesBooks(
+    db: FirebaseFirestore,
+    idsList: List<String>,
+    onBooks: (List<Book>) -> Unit
+) {
+    db.collection("books")
+        .whereIn(FieldPath.documentId(), idsList)
+        .get()
+        .addOnSuccessListener { task ->
+            val booksList = task.toObjects(Book::class.java).map {
+                if (idsList.contains(it.key)) {
+                    it.copy(isFaves = true)
+                } else {
+                    it
+                }
+            }
+            onBooks(booksList)
+        }
+        .addOnFailureListener { error ->
+            Log.d("MyLog", "error getAllBooks: ${error}")
+
+        }
+}
+ fun getAllFavesIds(
     db: FirebaseFirestore,
     uid: String,
     onFaves: (List<String>) -> Unit

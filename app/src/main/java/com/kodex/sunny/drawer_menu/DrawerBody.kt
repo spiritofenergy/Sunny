@@ -40,6 +40,8 @@ import com.kodex.sunny.utils.Categories
 @Composable
 fun DrawerBody(
    // viewModel: MainScreenViewModel = hiltViewModel(),
+    onFavesClick: () -> Unit = {},
+    onHomeClick: () -> Unit = {},
     onAdmin: (Boolean) -> Unit,
     onAdminClick: () -> Unit = {},
     onAddBookClick: () -> Unit = {},
@@ -77,14 +79,17 @@ fun DrawerBody(
                 .height(1.dp)
                 .background(GrayLite)
             )
-      /*     DrawerListItem(title = stringResource(id = R.string.faves)) {
-                onCategoryClick(Categories.FAVORITES)
-             }
-            DrawerListItem(title = stringResource(id = R.string.all)) {
-                onCategoryClick(Categories.ALL)
-               // viewModel.selectedBottomItemState.intValue = BottomMenuItem.Home.titleId
+        DrawerListItem(title = stringResource(id = R.string.faves)) {
+            onFavesClick()
 
-            }*/
+               // onCategoryClick(Categories.FAVORITES)
+             }
+              DrawerListItem(title = stringResource(id = R.string.all)) {
+                  onHomeClick()
+                onCategoryClick(Categories.ALL)
+              //  viewModel.selectedBottomItemState.intValue = BottomMenuItem.Home.titleId
+
+            }
             LazyColumn(Modifier.fillMaxWidth()) {
                 itemsIndexed(categoryList){index, title->
                     DrawerListItem(title = title) {
