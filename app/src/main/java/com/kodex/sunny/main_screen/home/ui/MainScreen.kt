@@ -1,6 +1,5 @@
 package com.kodex.sunny.main_screen.home.ui
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,11 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.google.android.play.core.integrity.bd
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.kodex.spark.ui.addScreen.data.Book
+import com.kodex.spark.ui.addScreen.data.Favorite
+import com.kodex.sunny.addScreen.data.Book
 import com.kodex.sunny.addScreen.data.BookListItemUi
 import com.kodex.sunny.addScreen.data.BookListItemUiReserve
 import com.kodex.sunny.drawer_menu.DrawerBody
@@ -37,23 +36,26 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     navData: MainScreenDataObject,
-    onAdminClick: ()-> Unit,
+    onBookEditClick: (Book) -> Unit,
+    onAdminClick: () -> Unit,
     onAddBookClick: () -> Unit,
 
     ) {
-    val driverState = rememberDrawerState(DrawerValue.Open)
+    val driverState = rememberDrawerState(DrawerValue.Closed)
     val savedInstanceState = remember { mutableStateOf(ButtonMenuItem.Home.title) }
     val coroutineScope = rememberCoroutineScope()
-    val bookListState = remember {
-        mutableStateOf(emptyList<Book>())
-    }
+    val bookListState = remember { mutableStateOf(emptyList<Book>()) }
+    val isAdminState = remember { mutableStateOf(false) }
 
+    val db = remember { Firebase.firestore }
     LaunchedEffect(Unit) {
-        val db = Firebase.firestore
-        getAllBooks(db){books ->
-            bookListState.value = books
+        getAllFavesBooks(db, navData.uid) { faves ->
+            getAllBooks(db, faves) { books ->
+                bookListState.value = books
+            }
         }
     }
+    coroutineScope.launch { driverState.close() }
 
     ModalNavigationDrawer(
         drawerState = driverState,
@@ -62,10 +64,15 @@ fun MainScreen(
             Column(Modifier.fillMaxWidth(0.7f)) {
                 DrawerHeader(navData.email)
                 DrawerBody(
-                    onAddBookClick = {
-                        onAddBookClick()
+                    onAdmin = { isAdmin ->
+                        isAdminState.value = isAdmin
                     },
-                )
+                    onAddBookClick
+
+
+                ) {
+                    coroutineScope.launch { driverState.close() }
+                }
 
 
             }
@@ -81,49 +88,113 @@ fun MainScreen(
                 )*/
             }
         ) { paddingValues ->
-            LazyVerticalGrid(columns = GridCells.Fixed(1),
-                modifier = Modifier.fillMaxSize()
-                .padding(paddingValues)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
 
-               if (bookListState.value.isEmpty()){
-                   items (10){
-                       BookListItemUiReserve()
-                   }
-               }else
-                items(bookListState.value) {book->
-                    BookListItemUi(book)
-                }
+                if (bookListState.value.isEmpty()) {
+                    items(10) {
+                        BookListItemUiReserve()
+                    }
+                } else
+                    items(bookListState.value) { book ->
+                        BookListItemUi(
+                            isAdminState.value,
+                            book,
+                            onEditClick = {
+                                onBookEditClick(book)
+                            },
+                            onFavesClick = {
+                                bookListState.value = bookListState.value.map {bk ->
+                                    if (bk.key == book.key) {
+                                        onFaves(
+                                            db,
+                                            navData.uid,
+                                            Favorite(book.key),
+                                            !bk.isFaves,
+                                        )
+                                        bk.copy(isFaves = !bk.isFaves)
+                                    } else {
+                                        bk
+                                    }
+                                }
+                            }
+                        )
+                    }
             }
         }
     }
-
 }
 
 private fun getAllBooks(
     db: FirebaseFirestore,
-    onBooks:(List<Book>) -> Unit
-){
-        db.collection("books")
-            .get()
-            .addOnSuccessListener { task->
-                val books = task.toObjects(Book::class.java)
-                onBooks(books)
-                Log.d("MyLog", "fun getAllBooks: Success")
+    idsList: List<String>,
+    onBooks: (List<Book>) -> Unit
+) {
+    db.collection("books")
+        .get()
+        .addOnSuccessListener { task ->
+            val booksList = task.toObjects(Book::class.java).map {
+                if (idsList.contains(it.key)) {
+                    it.copy(isFaves = true)
+                } else {
+                    it
+                }
             }
-            .addOnFailureListener {error->
-                Log.d("MyLog", "error getAllBooks: ${error}")
+            onBooks(booksList)
+            Log.d("MyLog", "fun getAllBooks: Success")
+        }
+        .addOnFailureListener { error ->
+            Log.d("MyLog", "error getAllBooks: ${error}")
 
+        }
+}
+private fun getAllFavesBooks(
+    db: FirebaseFirestore,
+    uid: String,
+    onFaves: (List<String>) -> Unit
+) {
+    db.collection("users")
+        .document(uid)
+        .collection("favorites")
+        .get()
+        .addOnSuccessListener { task ->
+            val idsList = task.toObjects(Favorite::class.java)
+            val keysList = arrayListOf<String>()
+            idsList.forEach {
+                keysList.add(it.key)
             }
+            onFaves(keysList)
+        }
+        .addOnFailureListener {
+
+        }
 }
 
-@Composable
-@Preview
-fun MainScreenPreview() {
-    MainScreen(
-        navData = MainScreenDataObject(),
-        onAdminClick = {},
-        onAddBookClick = {}
-    )
+private fun onFaves(
+    db: FirebaseFirestore,
+    uid: String,
+    favorite: Favorite,
+    isFaves: Boolean,
+    ){
+    if (isFaves) {
+        db.collection(
+            "users"
+        ).document(uid)
+            .collection("favorites")
+            .document(favorite.key)
+            .set(favorite)
+
+    }else{
+        db.collection(
+            "users"
+        ).document(uid)
+            .collection("favorites")
+            .document(favorite.key)
+            .delete()
+    }
 }
 

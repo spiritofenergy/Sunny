@@ -54,16 +54,10 @@ class MainActivity : ComponentActivity() {
 
                             savedInstanceState.value = savedInstanceTitle
                             when (savedInstanceTitle) {
-                                ButtonMenuItem.Home.title -> navController.navigate(
-                                    MainScreenDataObject
-                                )
-
+                                ButtonMenuItem.Home.title -> navController.navigate(MainScreenDataObject())
                                 ButtonMenuItem.Track.title -> navController.navigate(TrackerNavData)
                                 ButtonMenuItem.Login.title -> navController.navigate(LoginNavData)
-                                ButtonMenuItem.Settings.title -> navController.navigate(
-                                    SettingNavData
-                                )
-
+                                ButtonMenuItem.Settings.title -> navController.navigate(SettingNavData)
                                 ButtonMenuItem.Map.title -> navController.navigate(MapNavData)
                             }
 
@@ -79,16 +73,30 @@ class MainActivity : ComponentActivity() {
                             val navData = navEntry.toRoute<MainScreenDataObject>()
                             MainScreen(
                                 navData,
-                                onAddBookClick = {
-                                    navController.navigate(AddScreenObject)
+                                onBookEditClick ={ book ->
+                                    navController.navigate(AddScreenObject(
+                                        key = book.key,
+                                        title = book.title,
+                                        description = book.description,
+                                        price = book.price,
+                                        categoryIndex = book.categoryIndex,
+                                        imageUrl = book.imageUrl,
+                                        author = book.author,
+                                        timestamp = book.timestamp,
+                                        isFaves = book.isFaves,
+                                    ))
                                 },
                                 onAdminClick = {
-                                    navController.navigate(AddScreenObject)
-                                }
+                                    navController.navigate(AddScreenObject())
+                                },
+                                onAddBookClick = {
+                                    navController.navigate(AddScreenObject())
+                                },
                             )
                         }
                         composable<AddScreenObject> { navEntry ->
-                            AddBookScreen {
+                            val navData = navEntry.toRoute<AddScreenObject>()
+                            AddBookScreen(navData){
                                 navController.popBackStack()
                             }
 
@@ -103,7 +111,6 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate(navData)
                             }
                         }
-
 
                         composable<TrackerNavData> {
                             TrackerScreen()

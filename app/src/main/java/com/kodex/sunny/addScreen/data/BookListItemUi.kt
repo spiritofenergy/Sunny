@@ -37,13 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.kodex.spark.ui.addScreen.data.Book
-import com.kodex.sunny.R
-import com.kodex.sunny.ui.theme.Orange
 
 @Composable
 fun BookListItemUi(
-    book: Book
+    showEditButton: Boolean = false,
+    book: Book,
+    onEditClick: (Book) -> Unit = {},
+    onFavesClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -83,6 +83,20 @@ fun BookListItemUi(
             fontSize = 20.sp,
             modifier = Modifier.padding(start = 10.dp)
         )
+        Text(
+            text = book.timestamp.toString(),
+            color = Color.Blue,
+            fontSize = 12.sp,
+            modifier = Modifier.padding(start = 10.dp)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = book.categoryIndex.toString(),
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            modifier = Modifier.padding(start = 10.dp)
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
         Text(
@@ -95,12 +109,78 @@ fun BookListItemUi(
         )
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(
-            text = book.price.toString(),
-            color = Color.Gray,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(start = 10.dp)
-        )
+        // Нижняя строка
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(modifier = Modifier.weight(1F)) {
+                Text(
+                    modifier = Modifier
+                    .weight(2F)
+                        .padding(start = 5.dp),
+                    text = book.price.toString(),
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+
+                    )
+              /*  Text(
+                    modifier = Modifier
+                        .weight(1F)
+                        .padding(1.dp),
+                    text = " p",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+
+                    )*/
+            }
+
+
+            if (showEditButton)  IconButton(onClick = { onEditClick(book)
+                    }) {
+                    Icon(
+                        Icons.Default.Edit,
+                        modifier = Modifier
+                            .weight(1F),
+                            //.padding(1.dp),
+                        contentDescription = ""
+                    )
+                }
+
+
+          //  if (showEditButton)
+                IconButton(onClick = {
+                  //  onDeleteClick(book)
+                }) {
+                    Icon(
+                        Icons.Default.Delete,
+                        modifier = Modifier
+                            .weight(1F),
+                           // .padding(1.dp),
+                        contentDescription = ""
+                    )
+                }
+
+
+            IconButton(onClick = {
+                onFavesClick()
+            }) {
+                Icon(
+                    if (book.isFaves) {
+                        Icons.Default.Favorite
+
+                    } else
+                        Icons.Default.FavoriteBorder,
+                    contentDescription = "",
+                    tint = if (book.isFaves) Color.Red else Color.Gray
+                )
+            }
+
+
+            //IconButton { }(painter = painterResource(id = R.drawable))
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-package com.kodex.spark.ui.addScreen.data
+package com.kodex.sunny.addScreen.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

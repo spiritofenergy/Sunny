@@ -4,8 +4,8 @@ import com.kodex.sunny.utils.Categories
 import kotlinx.serialization.Serializable
 
 @Serializable
-object AddScreenObject
-   /* val key: String = "",
+data class AddScreenObject(
+    val key: String = "",
     val title: String = "",
     val searchTitle: String = title.lowercase(),
     val description: String = "",
@@ -16,5 +16,4 @@ object AddScreenObject
     val timestamp: Long = System.currentTimeMillis(),
     val isFaves: Boolean = false
     )
-    */
 
