@@ -60,9 +60,11 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+   // implementation(libs.firebase.storage.ktx)
     // implementation(libs.firebase.common.ktx)
     // implementation(libs.firebase.auth.ktx)
-    // implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.hilt.android)

@@ -1,8 +1,6 @@
 package com.kodex.sunny.addScreen
 
 import android.content.ContentResolver
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
 import android.util.Log
@@ -42,11 +40,10 @@ import com.kodex.sunny.addScreen.data.AddScreenObject
 import com.kodex.sunny.main_screen.login.ui.LoginButton
 import com.kodex.sunny.main_screen.login.ui.RoundedCornerTextField
 import com.kodex.sunny.ui.theme.ButtonColorDark
-import com.kodex.sunny.utils.ImageUtils.imageToBase64
 
 
 @Composable
-fun AddBookScreen(
+fun AddBookScreen5(
     navData: AddScreenObject = AddScreenObject(),
     onSaved: () -> Unit = {},
 ) {
@@ -55,23 +52,6 @@ fun AddBookScreen(
     val description = remember { mutableStateOf(navData.description) }
     val prise = remember { mutableStateOf(navData.price.toString()) }
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
-    val imageBitMap = remember {
-        var bitMap: Bitmap? = null
-        try {
-            val base64Image = Base64.decode(navData.imageUrl, Base64.DEFAULT)
-            bitMap = BitmapFactory.decodeByteArray(
-                base64Image, 0,
-                base64Image.size
-            )
-        }catch (e: IllegalArgumentException){
-            e.printStackTrace()
-            Log.d("MyLog", "bitMap Error: ${e.message}")
-        }
-        Log.d("MyLog4", "bitMap: $bitMap")
-
-        mutableStateOf(bitMap)
-    }
-
     val cv = LocalContext.current.contentResolver
     Log.d("MyLog1", "$navData")
     Log.d("MyLog2", "$selectedImageUri")
@@ -81,12 +61,12 @@ fun AddBookScreen(
 
     val imageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
+
     ) { uri ->
-        imageBitMap.value = null
+        navImageUrl.value = " "
         selectedImageUri.value = uri
         Log.d("MyLog3", "$uri")
     }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -99,6 +79,12 @@ fun AddBookScreen(
             contentScale = ContentScale.Crop,
             alpha = 0.3f,
         )
+        /*  Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BoxFilter)
+        )*/
+
         // Основной лист
         Column(
             modifier = Modifier
@@ -109,7 +95,10 @@ fun AddBookScreen(
         ) {
             // Фото
             Image(
-                painter = rememberAsyncImagePainter(model = imageBitMap.value?: selectedImageUri.value),
+                painter = rememberAsyncImagePainter(
+                   // model = navImageUrl.value.ifEmpty { selectedImageUri.value }
+                    model = navImageUrl.value
+                ),
                 contentDescription = "Selected Image",
                 modifier = Modifier
                     .width(300.dp)
@@ -166,32 +155,47 @@ fun AddBookScreen(
             }
 
             LoginButton(text = "Save") {
-                saveBookToFirestore(
-                    firestore = FirebaseFirestore.getInstance(),
-                    Book(
+                   val book = Book(
                         key = navData.key,
                         title = title.value,
                         description = description.value,
                         price = prise.value.toInt(),
-                        categoryIndex = categoryIndex.value,
-                        timestamp = System.currentTimeMillis(),
-                        imageUrl = if (selectedImageUri.value != null){
-                            imageToBase64(
-                            selectedImageUri.value!!,
-                             cv
-                        )}
-                        else {
-                            navData.imageUrl
-                        }
-                ),
+                        categoryIndex = 0,
+                   )
+                       if (selectedImageUri.value != null) {
+                    saveBookImage(
+                        navData.imageUrl,
+                        selectedImageUri.value!!,
+                        storage = FirebaseStorage.getInstance(),
+                        firestore = FirebaseFirestore.getInstance(),
+                        book = book,
                         onSaved = {
                             onSaved()
                         },
                         onError = { error ->
-                            Log.d("MyLog4", "Error: ${error}")
+                            Log.d("MyLog", "Error: $error")
+                        }
+                    )
+                } else {
+                    saveBookToFirestore(
+                        FirebaseFirestore.getInstance(),
+                        Book(
+                            key = navData.key,
+                            title = title.value,
+                            description = description.value,
+                            price = prise.value.toInt(),
+                            categoryIndex = 0,
+                            imageUrl = navData.imageUrl
+                        ),
+                        onSaved = {
+                            onSaved()
+                        },
+                        onError = { error ->
+                            Log.d("MyLog", "Error: $error")
                         }
                     )
                     // viewModel.uploadBook(navData.copy(imageUrl = imageBase64.value))
+                }
             }
         }
     }
@@ -217,7 +221,7 @@ private fun saveBookImage(
     val uploadTask = storageRef.putFile(uri)
     uploadTask.addOnSuccessListener {
         storageRef.downloadUrl.addOnSuccessListener { url ->
-          /*  saveBookToFirestore(
+            saveBookToFirestore(
                 firestore,
                 book.copy(imageUrl = url.toString()),
                 onSaved = {
@@ -226,7 +230,7 @@ private fun saveBookImage(
                 onError = {
                     onError(it)
                 }
-            )*/
+            )
         }
     }
 }
@@ -245,7 +249,7 @@ private fun saveBookToFirestore(
         .addOnFailureListener { onError(it.message ?: "Error") }
 }
 
-/*private fun imageToBase64(
+private fun imageToBase64(
     uri: Uri,
     contentResolver: ContentResolver
 ): String {
@@ -255,11 +259,11 @@ private fun saveBookToFirestore(
     return bytes?.let {
         Base64.encodeToString(it, Base64.DEFAULT)
     } ?: ""
-}*/
+}
 
 @Composable
 @Preview
-fun AddBookScreenPreview() {
+fun AddBookScreenPreview5() {
     /*AddBookScreen {
         navController.popBackStack()
     }*/
