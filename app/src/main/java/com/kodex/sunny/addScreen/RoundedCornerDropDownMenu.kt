@@ -24,13 +24,13 @@ import com.kodex.sunny.ui.theme.ButtonColor
 
 @Composable
 fun RoundedCornerDropDownMenu(
-    defCategory: Int,
-    onOptionSelected: (Int) -> Unit,
+    defCategory: String,
+    onOptionSelected: (String) -> Unit,
 ) {
     val expanded = remember { mutableStateOf(false) }
     val categoryList = stringArrayResource(id = R.array.category_arrays)
-    val selectedOption = remember { mutableStateOf(categoryList[defCategory]) }
-    selectedOption.value = categoryList[defCategory]
+    val selectedOption = remember { mutableStateOf(defCategory) }
+  //  selectedOption.value = categoryList[defCategory]
 
     Box(
         modifier = Modifier
@@ -59,14 +59,14 @@ fun RoundedCornerDropDownMenu(
             onDismissRequest = {
                 expanded.value = false
             }) {
-            categoryList.forEachIndexed { index, title ->
+            categoryList.forEach{ option ->
                 DropdownMenuItem(
                     text = {
-                        Text(text = title)
+                        Text(text = option)
                     }, onClick = {
-                        selectedOption.value = title
+                        selectedOption.value = option
                         expanded.value = false
-                        onOptionSelected(index)
+                        onOptionSelected(option)
                     })
             }
         }
@@ -76,7 +76,7 @@ fun RoundedCornerDropDownMenu(
 @Preview
 fun RoundedCornerDropDownMenuPreview() {
     RoundedCornerDropDownMenu(
-        defCategory = 0,
+        defCategory = "Booking",
         onOptionSelected = {}
     )
 }

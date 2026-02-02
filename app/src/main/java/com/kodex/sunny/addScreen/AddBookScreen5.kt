@@ -47,7 +47,7 @@ fun AddBookScreen5(
     navData: AddScreenObject = AddScreenObject(),
     onSaved: () -> Unit = {},
 ) {
-    val categoryIndex = remember { mutableStateOf(navData.categoryIndex) }
+    val selectCategory = remember { mutableStateOf(navData.category) }
     val title = remember { mutableStateOf(navData.title) }
     val description = remember { mutableStateOf(navData.description) }
     val prise = remember { mutableStateOf(navData.price.toString()) }
@@ -113,10 +113,10 @@ fun AddBookScreen5(
                 fontFamily = FontFamily.Serif
             )
             Spacer(modifier = Modifier.height(10.dp))
-            RoundedCornerDropDownMenu(
-                defCategory = categoryIndex.value,
+
+            RoundedCornerDropDownMenu(defCategory = selectCategory.value,
                 onOptionSelected = { selectedItem ->
-                    categoryIndex.value = selectedItem
+                    selectCategory.value = selectedItem
                 },
             )
 
@@ -160,7 +160,7 @@ fun AddBookScreen5(
                         title = title.value,
                         description = description.value,
                         price = prise.value.toInt(),
-                        categoryIndex = 0,
+                        category = selectCategory.value,
                    )
                        if (selectedImageUri.value != null) {
                     saveBookImage(
@@ -184,7 +184,7 @@ fun AddBookScreen5(
                             title = title.value,
                             description = description.value,
                             price = prise.value.toInt(),
-                            categoryIndex = 0,
+                            category = selectCategory.value,
                             imageUrl = navData.imageUrl
                         ),
                         onSaved = {

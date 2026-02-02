@@ -10,7 +10,7 @@ data class AddScreenObject(
     val searchTitle: String = title.lowercase(),
     val description: String = "",
     val price: Int = 0,
-    val categoryIndex: Int = Categories.PARK,
+    val category: String = "Выберите катерогию",
     val imageUrl: String = "",
     val author: String = "",
     val timestamp: Long = System.currentTimeMillis(),

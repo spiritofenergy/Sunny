@@ -34,15 +34,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.kodex.sunny.R
 import com.kodex.sunny.custom_ui.Progress
-import com.kodex.sunny.main_screen.home.data.MainScreenDataObject
+import com.kodex.sunny.navigation.NavRoutes.MainScreenDataObject
+import com.kodex.sunny.navigation.NavRoutes
 import com.kodex.sunny.ui.theme.ButtonColorDark
-import com.kodex.sunny.utils.ProgressBar
 import kotlinx.coroutines.delay
 
 
 @Composable
 fun LoginScreen(
-    onNavigateToMainScreen: (MainScreenDataObject) -> Unit = {}
+    onNavigateToMainScreen: (NavRoutes.MainScreenDataObject) -> Unit = {}
 ) {
     val auth = remember {
         Firebase.auth
@@ -196,7 +196,7 @@ fun signIn(
     auth: FirebaseAuth,
     email: String,
     password: String,
-    onSignInSuccess: (MainScreenDataObject) -> Unit,
+    onSignInSuccess: (NavRoutes.MainScreenDataObject) -> Unit,
     onSignInFailure: (String) -> Unit
 ) {
 
@@ -207,7 +207,7 @@ fun signIn(
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) onSignInSuccess(
-                MainScreenDataObject(
+                NavRoutes.MainScreenDataObject(
                     uid = auth.currentUser?.uid ?: "",
                     email = auth.currentUser?.email ?: ""
                 )

@@ -17,11 +17,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.kodex.gpstracker.main_screen.settings.ui.SettingScreen
 import com.kodex.sunny.addScreen.AddBookScreen
-import com.kodex.sunny.addScreen.data.AddScreenObject
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
 import com.kodex.sunny.main_screen.button_bar.ui.ButtonMenu
-import com.kodex.sunny.main_screen.home.data.MainScreenDataObject
-import com.kodex.sunny.main_screen.login.data.LoginNavData
 import com.kodex.sunny.main_screen.login.ui.LoginScreen
 import com.kodex.sunny.main_screen.home.ui.MainScreen
 import com.kodex.sunny.main_screen.map.data.MapNavData
@@ -29,6 +26,7 @@ import com.kodex.sunny.main_screen.map.ui.MapScreen
 import com.kodex.sunny.main_screen.settings.data.SettingNavData
 import com.kodex.sunny.main_screen.tracker.data.TrackerNavData
 import com.kodex.sunny.main_screen.tracker.ui.TrackerScreen
+import com.kodex.sunny.navigation.NavRoutes
 import com.kodex.sunny.ui.theme.SunnyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.config.Configuration
@@ -54,9 +52,9 @@ class MainActivity : ComponentActivity() {
 
                             savedInstanceState.value = savedInstanceTitle
                             when (savedInstanceTitle) {
-                                ButtonMenuItem.Home.title -> navController.navigate(MainScreenDataObject())
+                                ButtonMenuItem.Home.title -> navController.navigate(NavRoutes.MainScreenDataObject())
                                 ButtonMenuItem.Track.title -> navController.navigate(TrackerNavData)
-                                ButtonMenuItem.Login.title -> navController.navigate(LoginNavData)
+                                ButtonMenuItem.Login.title -> navController.navigate(NavRoutes.LoginScreenObject)
                                 ButtonMenuItem.Settings.title -> navController.navigate(SettingNavData)
                                 ButtonMenuItem.Map.title -> navController.navigate(MapNavData)
                             }
@@ -65,21 +63,22 @@ class MainActivity : ComponentActivity() {
                     }) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = LoginNavData,
+                        startDestination = NavRoutes.LoginScreenObject,
                         modifier = Modifier.padding(innerPadding)
                     ) {
 
-                        composable<MainScreenDataObject> { navEntry ->
-                            val navData = navEntry.toRoute<MainScreenDataObject>()
+                        composable<NavRoutes.MainScreenDataObject> { navEntry ->
+                            val navData = navEntry.toRoute<NavRoutes.MainScreenDataObject>()
                             MainScreen(
                                 navData,
                                 onBookEditClick ={ book ->
-                                    navController.navigate(AddScreenObject(
+                                    navController.navigate(
+                                        NavRoutes.AddScreenObject(
                                         key = book.key,
                                         title = book.title,
                                         description = book.description,
                                         price = book.price,
-                                        categoryIndex = book.categoryIndex,
+                                        category = book.category,
                                         imageUrl = book.imageUrl,
                                         author = book.author,
                                         timestamp = book.timestamp,
@@ -87,15 +86,15 @@ class MainActivity : ComponentActivity() {
                                     ))
                                 },
                                 onAdminClick = {
-                                    navController.navigate(AddScreenObject())
+                                    navController.navigate(NavRoutes.AddScreenObject())
                                 },
                                 onAddBookClick = {
-                                    navController.navigate(AddScreenObject())
+                                    navController.navigate(NavRoutes.AddScreenObject())
                                 },
                             )
                         }
-                        composable<AddScreenObject> { navEntry ->
-                            val navData = navEntry.toRoute<AddScreenObject>()
+                        composable<NavRoutes.AddScreenObject> { navEntry ->
+                            val navData = navEntry.toRoute<NavRoutes.AddScreenObject>()
                             AddBookScreen(navData){
                                 navController.popBackStack()
                             }
@@ -106,7 +105,7 @@ class MainActivity : ComponentActivity() {
                             SettingScreen()
                         }
 
-                        composable<LoginNavData> {
+                        composable<NavRoutes.LoginScreenObject> {
                             LoginScreen { navData ->
                                 navController.navigate(navData)
                             }

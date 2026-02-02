@@ -13,7 +13,7 @@ data class Book(
     val searchTitle: String = title.lowercase(),
     val description: String = "",
     val price: Int = 0,
-    val categoryIndex: Int = Categories.ALL,
+    val category: String = "",
     val imageUrl: String = "",
     val author: String = "",
     val timestamp: Long = System.currentTimeMillis(),

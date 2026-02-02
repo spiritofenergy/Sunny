@@ -1,6 +1,5 @@
 package com.kodex.sunny.addScreen
 
-import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -41,16 +40,17 @@ import com.kodex.sunny.R
 import com.kodex.sunny.addScreen.data.AddScreenObject
 import com.kodex.sunny.main_screen.login.ui.LoginButton
 import com.kodex.sunny.main_screen.login.ui.RoundedCornerTextField
+import com.kodex.sunny.navigation.NavRoutes
 import com.kodex.sunny.ui.theme.ButtonColorDark
 import com.kodex.sunny.utils.ImageUtils.imageToBase64
 
 
 @Composable
 fun AddBookScreen(
-    navData: AddScreenObject = AddScreenObject(),
+    navData: NavRoutes.AddScreenObject = NavRoutes.AddScreenObject(),
     onSaved: () -> Unit = {},
 ) {
-    val categoryIndex = remember { mutableStateOf(navData.categoryIndex) }
+    val selectedCategory = remember { mutableStateOf(navData.category) }
     val title = remember { mutableStateOf(navData.title) }
     val description = remember { mutableStateOf(navData.description) }
     val prise = remember { mutableStateOf(navData.price.toString()) }
@@ -73,8 +73,6 @@ fun AddBookScreen(
     }
 
     val cv = LocalContext.current.contentResolver
-    Log.d("MyLog1", "$navData")
-    Log.d("MyLog2", "$selectedImageUri")
 
     val navImageUrl = remember { mutableStateOf(navData.imageUrl) }
     Log.d("MyLog3", "$navImageUrl")
@@ -125,9 +123,9 @@ fun AddBookScreen(
             )
             Spacer(modifier = Modifier.height(10.dp))
             RoundedCornerDropDownMenu(
-                defCategory = categoryIndex.value,
+                defCategory = selectedCategory.value,
                 onOptionSelected = { selectedItem ->
-                    categoryIndex.value = selectedItem
+                    selectedCategory.value = selectedItem
                 },
             )
 
@@ -173,7 +171,7 @@ fun AddBookScreen(
                         title = title.value,
                         description = description.value,
                         price = prise.value.toInt(),
-                        categoryIndex = categoryIndex.value,
+                        category = selectedCategory.value,
                         timestamp = System.currentTimeMillis(),
                         imageUrl = if (selectedImageUri.value != null){
                             imageToBase64(

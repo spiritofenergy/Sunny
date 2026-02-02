@@ -35,5 +35,8 @@
     <string name= "empty_list" translatable="false">Лист пустой</string>
     <!-- DrawerBody -->
     <string name= "all" >Все</string>
+    <string name= "meals">Meals</string>
+    <string name= "swimming">Swimming</string>
+    <string name= "entertainment">Entertainment</string>
 
 </resources>
