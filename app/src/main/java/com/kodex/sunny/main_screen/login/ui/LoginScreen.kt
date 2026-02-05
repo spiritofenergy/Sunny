@@ -32,10 +32,9 @@ import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.kodex.bookmarket.navigation.NavRoutes
 import com.kodex.sunny.R
 import com.kodex.sunny.custom_ui.Progress
-import com.kodex.sunny.navigation.NavRoutes.MainScreenDataObject
-import com.kodex.sunny.navigation.NavRoutes
 import com.kodex.sunny.ui.theme.ButtonColorDark
 import kotlinx.coroutines.delay
 
@@ -168,7 +167,7 @@ fun signUp(
     auth: FirebaseAuth,
     email: String,
     password: String,
-    onSignInSuccess: (MainScreenDataObject) -> Unit,
+    onSignInSuccess: (NavRoutes.MainScreenDataObject) -> Unit,
     onSignInFailure: (String) -> Unit
 ) {
 
@@ -179,7 +178,7 @@ fun signUp(
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) onSignInSuccess(
-                MainScreenDataObject(
+                NavRoutes.MainScreenDataObject(
                     uid = auth.currentUser?.uid ?: "",
                     email = auth.currentUser?.email ?: ""
                 )

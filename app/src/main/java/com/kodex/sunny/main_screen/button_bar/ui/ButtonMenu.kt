@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
-import com.kodex.sunny.main_screen.home.ui.getAllBooks
 
 @Composable
 fun ButtonMenu(
@@ -20,6 +19,7 @@ fun ButtonMenu(
 ) {
     val items = listOf(
         ButtonMenuItem.Home,
+        ButtonMenuItem.Favorite,
         ButtonMenuItem.Track,
         ButtonMenuItem.Login,
         ButtonMenuItem.Map,

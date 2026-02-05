@@ -2,6 +2,7 @@ package com.kodex.sunny.main_screen.home.ui
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,13 +19,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.kodex.bookmarket.navigation.NavRoutes
 import com.kodex.spark.ui.addScreen.data.Favorite
 import com.kodex.sunny.R
 import com.kodex.sunny.addScreen.data.Book
@@ -33,7 +35,6 @@ import com.kodex.sunny.addScreen.data.BookListItemUiReserve
 import com.kodex.sunny.drawer_menu.DrawerBody
 import com.kodex.sunny.drawer_menu.DrawerHeader
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
-import com.kodex.sunny.navigation.NavRoutes
 import kotlinx.coroutines.launch
 
 
@@ -42,8 +43,10 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     navData: NavRoutes.MainScreenDataObject,
     onBookEditClick: (Book) -> Unit,
-    onAdminClick: () -> Unit,
     onAddBookClick: () -> Unit,
+    onHomeClick: () -> Unit,
+    onBookClick: (Book) -> Unit,
+    onAdminClick: () -> Unit,
 
     ) {
     val categoryList = stringArrayResource(id = R.array.category_arrays)
@@ -52,12 +55,13 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
     val bookListState = remember { mutableStateOf(emptyList<Book>()) }
     val isAdminState = remember { mutableStateOf(false) }
+    val isFavListEmptyState = remember { mutableStateOf(false) }
     val selectedBottomItemState = remember { mutableStateOf(ButtonMenuItem.Home.title) }
 
     val db = remember { Firebase.firestore }
     LaunchedEffect(Unit) {
         getAllFavesIds(db, navData.uid) { faves ->
-            getAllBooksNotCategory(db, faves) { books ->
+            getAllBooks(db, faves) { books ->
                 bookListState.value = books
             }
         }
@@ -74,23 +78,25 @@ fun MainScreen(
                     onFavesClick = {
                         getAllFavesIds(db, navData.uid) { faves ->
                             getAllFavesBooks(db, faves) { books ->
+                                isFavListEmptyState.value = books.isEmpty()
                                 bookListState.value = books
-                                    coroutineScope.launch { driverState.close() }
+                                coroutineScope.launch { driverState.close() }
                             }
                         }
                     },
                     onHomeClick = {
-                      getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooksNotCategory(db, faves ) { books ->
+                        getAllFavesIds(db, navData.uid) { faves ->
+                            getAllBooks(db, faves) { books ->
                                 bookListState.value = books
+                                isFavListEmptyState.value = books.isEmpty()
                                 coroutineScope.launch { driverState.close() }
                             }
                         }
                     },
 
                     onMealsClick = {
-                      getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooks(db, faves, categoryList[1] ) { books ->
+                        getAllFavesIds(db, navData.uid) { faves ->
+                            getAllBooksFromCategory(db, faves, categoryList[1]) { books ->
                                 bookListState.value = books
                                 coroutineScope.launch { driverState.close() }
                             }
@@ -98,8 +104,8 @@ fun MainScreen(
                     },
 
                     onSwimmingClick = {
-                      getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooks(db, faves, categoryList[2] ) { books ->
+                        getAllFavesIds(db, navData.uid) { faves ->
+                            getAllBooksFromCategory(db, faves, categoryList[2]) { books ->
                                 bookListState.value = books
                                 coroutineScope.launch { driverState.close() }
                             }
@@ -107,8 +113,8 @@ fun MainScreen(
                     },
 
                     onEntertainmentClick = {
-                      getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooks(db, faves, categoryList[3] ) { books ->
+                        getAllFavesIds(db, navData.uid) { faves ->
+                            getAllBooksFromCategory(db, faves, categoryList[3]) { books ->
                                 bookListState.value = books
                                 coroutineScope.launch { driverState.close() }
                             }
@@ -116,8 +122,8 @@ fun MainScreen(
                     },
 
                     onTreatmentClick = {
-                      getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooks(db, faves, categoryList[4] ) { books ->
+                        getAllFavesIds(db, navData.uid) { faves ->
+                            getAllBooksFromCategory(db, faves, categoryList[4]) { books ->
                                 bookListState.value = books
                                 coroutineScope.launch { driverState.close() }
                             }
@@ -125,8 +131,8 @@ fun MainScreen(
                     },
 
                     onExcursionsClick = {
-                      getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooks(db, faves, categoryList[5] ) { books ->
+                        getAllFavesIds(db, navData.uid) { faves ->
+                            getAllBooksFromCategory(db, faves, categoryList[5]) { books ->
                                 bookListState.value = books
                                 coroutineScope.launch { driverState.close() }
                             }
@@ -134,8 +140,8 @@ fun MainScreen(
                     },
 
                     onBookingClick = {
-                      getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooks(db, faves, categoryList[6] ) { books ->
+                        getAllFavesIds(db, navData.uid) { faves ->
+                            getAllBooksFromCategory(db, faves, categoryList[6]) { books ->
                                 bookListState.value = books
                                 coroutineScope.launch { driverState.close() }
                             }
@@ -145,11 +151,10 @@ fun MainScreen(
                     onAdmin = { isAdmin ->
                         isAdminState.value = isAdmin
                     },
-                    onAddBookClick
-                    ,
+                    onAddBookClick,
                     onCategoryClickString = { category ->
                         getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooks(db, faves, category) { books ->
+                            getAllBooksFromCategory(db, faves, category) { books ->
                                 bookListState.value = books
                             }
                         }
@@ -170,6 +175,11 @@ fun MainScreen(
                 )*/
             }
         ) { paddingValues ->
+            if (isFavListEmptyState.value)
+                Box(modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center){
+                    BookListItemUiReserve()
+                }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
                 modifier = Modifier
@@ -177,20 +187,24 @@ fun MainScreen(
                     .padding(paddingValues)
             ) {
 
-                if (bookListState.value.isEmpty()) {
+               /* if (bookListState.value.isEmpty()) {
                     items(10) {
                         BookListItemUiReserve()
                     }
-                } else
+                } else*/
                     items(bookListState.value) { book ->
+                        Log.d("MyLog", "MainScreen: ${bookListState}")
                         BookListItemUi(
                             isAdminState.value,
                             book,
+                            onBookClick = {bk->
+                                onBookClick(bk)
+                            },
                             onEditClick = {
                                 onBookEditClick(book)
                             },
                             onFavesClick = {
-                                bookListState.value = bookListState.value.map {bk ->
+                                bookListState.value = bookListState.value.map { bk ->
                                     if (bk.key == book.key) {
                                         onFaves(
                                             db,
@@ -203,6 +217,9 @@ fun MainScreen(
                                         bk
                                     }
                                 }
+                                if (selectedBottomItemState.value == ButtonMenuItem.Favorite.title)
+                                    bookListState.value =
+                                        bookListState.value.sortedBy { it.isFaves }
                             }
                         )
                     }
@@ -211,121 +228,10 @@ fun MainScreen(
     }
 }
 
- fun getAllBooks(
-    db: FirebaseFirestore,
-    idsList: List<String>,
-    category: String,
-    onBooks: (List<Book>) -> Unit
-) {
-    db.collection("books")
-        .whereEqualTo("category", category)
-        .get()
-        .addOnSuccessListener { task ->
-            val booksList = task.toObjects(Book::class.java).map {
-                if (idsList.contains(it.key)) {
-                    it.copy(isFaves = true)
-                } else {
-                    it
-                }
-            }
-            onBooks(booksList)
-            Log.d("MyLog", "fun getAllBooks: Success")
-        }
-        .addOnFailureListener { error ->
-            Log.d("MyLog", "error getAllBooks: ${error}")
 
-        }
-}
- fun getAllBooksNotCategory(
-    db: FirebaseFirestore,
-    idsList: List<String>,
-    onBooks: (List<Book>) -> Unit
-) {
-    db.collection("books")
-        .get()
-        .addOnSuccessListener { task ->
-            val booksList = task.toObjects(Book::class.java).map {
-                if (idsList.contains(it.key)) {
-                    it.copy(isFaves = true)
-                } else {
-                    it
-                }
-            }
-            onBooks(booksList)
-            Log.d("MyLog", "fun getAllBooks: Success")
-        }
-        .addOnFailureListener { error ->
-            Log.d("MyLog", "error getAllBooks: ${error}")
 
-        }
-}
-private fun getAllFavesBooks(
-    db: FirebaseFirestore,
-    idsList: List<String>,
-    onBooks: (List<Book>) -> Unit
-) {
-    db.collection("books")
-        .whereIn(FieldPath.documentId(), idsList)
-        .get()
-        .addOnSuccessListener { task ->
-            val booksList = task.toObjects(Book::class.java).map {
-                if (idsList.contains(it.key)) {
-                    it.copy(isFaves = true)
-                } else {
-                    it
-                }
-            }
-            onBooks(booksList)
-        }
-        .addOnFailureListener { error ->
-            Log.d("MyLog", "error getAllBooks: ${error}")
 
-        }
-}
- fun getAllFavesIds(
-    db: FirebaseFirestore,
-    uid: String,
-    onFaves: (List<String>) -> Unit
-) {
-    db
-        .collection("users")
-        .document(uid)
-        .collection("favorites")
-        .get()
-        .addOnSuccessListener { task ->
-            val idsList = task.toObjects(Favorite::class.java)
-            val keysList = arrayListOf<String>()
-            idsList.forEach {
-                keysList.add(it.key)
-            }
-            onFaves(keysList)
-        }
-        .addOnFailureListener {
 
-        }
-}
 
-private fun onFaves(
-    db: FirebaseFirestore,
-    uid: String,
-    favorite: Favorite,
-    isFaves: Boolean,
-    ){
-    if (isFaves) {
-        db
-            .collection("users")
-            .document(uid)
-            .collection("favorites")
-            .document(favorite.key)
-            .set(favorite)
 
-    }else{
-        db
-            .collection("users")
-            .document(uid)
-            .collection("favorites")
-            .document(favorite.key)
-            .delete()
-    }
-}
 

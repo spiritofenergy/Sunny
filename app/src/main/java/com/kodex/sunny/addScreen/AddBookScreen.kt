@@ -35,12 +35,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.kodex.bookmarket.navigation.NavRoutes
 import com.kodex.sunny.addScreen.data.Book
 import com.kodex.sunny.R
 import com.kodex.sunny.addScreen.data.AddScreenObject
 import com.kodex.sunny.main_screen.login.ui.LoginButton
 import com.kodex.sunny.main_screen.login.ui.RoundedCornerTextField
-import com.kodex.sunny.navigation.NavRoutes
 import com.kodex.sunny.ui.theme.ButtonColorDark
 import com.kodex.sunny.utils.ImageUtils.imageToBase64
 
@@ -53,7 +53,7 @@ fun AddBookScreen(
     val selectedCategory = remember { mutableStateOf(navData.category) }
     val title = remember { mutableStateOf(navData.title) }
     val description = remember { mutableStateOf(navData.description) }
-    val prise = remember { mutableStateOf(navData.price.toString()) }
+    val price = remember { mutableStateOf(navData.price.toString()) }
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
     val imageBitMap = remember {
         var bitMap: Bitmap? = null
@@ -151,10 +151,10 @@ fun AddBookScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             RoundedCornerTextField(
-                text = prise.value,
+                text = price.value,
                 label = "Цена:"
             ) {
-                prise.value = it
+                price.value = it
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -170,7 +170,7 @@ fun AddBookScreen(
                         key = navData.key,
                         title = title.value,
                         description = description.value,
-                        price = prise.value.toInt(),
+                        price = price.value.toInt(),
                         category = selectedCategory.value,
                         timestamp = System.currentTimeMillis(),
                         imageUrl = if (selectedImageUri.value != null){
