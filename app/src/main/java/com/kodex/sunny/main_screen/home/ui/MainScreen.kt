@@ -22,12 +22,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.FieldPath
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.google.android.play.core.integrity.v
 import com.kodex.bookmarket.navigation.NavRoutes
-import com.kodex.spark.ui.addScreen.data.Favorite
 import com.kodex.sunny.R
 import com.kodex.sunny.addScreen.data.Book
 import com.kodex.sunny.addScreen.data.BookListItemUi
@@ -41,6 +38,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun MainScreen(
+    viewModel: MainScreenViewModel = hiltViewModel(),
     navData: NavRoutes.MainScreenDataObject,
     onBookEditClick: (Book) -> Unit,
     onAddBookClick: () -> Unit,
@@ -53,19 +51,21 @@ fun MainScreen(
     val driverState = rememberDrawerState(DrawerValue.Closed)
     val savedInstanceState = remember { mutableStateOf(ButtonMenuItem.Home.title) }
     val coroutineScope = rememberCoroutineScope()
-    val bookListState = remember { mutableStateOf(emptyList<Book>()) }
     val isAdminState = remember { mutableStateOf(false) }
-    val isFavListEmptyState = remember { mutableStateOf(false) }
-    val selectedBottomItemState = remember { mutableStateOf(ButtonMenuItem.Home.title) }
 
-    val db = remember { Firebase.firestore }
     LaunchedEffect(Unit) {
-        getAllFavesIds(db, navData.uid) { faves ->
-            getAllBooks(db, faves) { books ->
-                bookListState.value = books
-            }
+        if (viewModel.booksListState.value.isEmpty()) {
+            viewModel.getAllBooks()
+            Log.d("MyLog0", "${viewModel.booksListState.value} ")
+        }else{
+            viewModel.selectedBottomItemState.value = savedInstanceState.value
+            Log.d("MyLog0", "$navData: пусто ")
+
         }
-    }
+        Log.d("MyLog1", "MainScreen: ${viewModel.booksListState}")
+        Log.d("MyLog2", "$navData: ")
+
+        }
     coroutineScope.launch { driverState.close() }
 
     ModalNavigationDrawer(
@@ -76,76 +76,48 @@ fun MainScreen(
                 DrawerHeader(navData.email)
                 DrawerBody(
                     onFavesClick = {
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllFavesBooks(db, faves) { books ->
-                                isFavListEmptyState.value = books.isEmpty()
-                                bookListState.value = books
+                            viewModel.getAllFavesBook(
+                                isListEmpty = {isEmpty->
+                                    viewModel.isFavesListEmptyState.value = isEmpty
+                                }
+                            )
                                 coroutineScope.launch { driverState.close() }
-                            }
-                        }
                     },
                     onHomeClick = {
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooks(db, faves) { books ->
-                                bookListState.value = books
-                                isFavListEmptyState.value = books.isEmpty()
-                                coroutineScope.launch { driverState.close() }
-                            }
-                        }
+                        viewModel.selectedBottomItemState.value = ButtonMenuItem.Home.title
+                        viewModel.getAllBooks()
+                        coroutineScope.launch { driverState.close() }
                     },
 
                     onMealsClick = {
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooksFromCategory(db, faves, categoryList[1]) { books ->
-                                bookListState.value = books
-                                coroutineScope.launch { driverState.close() }
-                            }
-                        }
+                       viewModel.getAllBooksFromCategory(categoryList[1])
+                        coroutineScope.launch { driverState.close() }
+
                     },
 
                     onSwimmingClick = {
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooksFromCategory(db, faves, categoryList[2]) { books ->
-                                bookListState.value = books
-                                coroutineScope.launch { driverState.close() }
-                            }
-                        }
+                      viewModel.getAllBooksFromCategory(categoryList[2])
+                        coroutineScope.launch { driverState.close() }
                     },
 
                     onEntertainmentClick = {
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooksFromCategory(db, faves, categoryList[3]) { books ->
-                                bookListState.value = books
-                                coroutineScope.launch { driverState.close() }
-                            }
-                        }
+                       viewModel.getAllBooksFromCategory(categoryList[3])
+                        coroutineScope.launch { driverState.close() }
                     },
 
                     onTreatmentClick = {
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooksFromCategory(db, faves, categoryList[4]) { books ->
-                                bookListState.value = books
-                                coroutineScope.launch { driverState.close() }
-                            }
-                        }
+                       viewModel.getAllBooksFromCategory(categoryList[4])
+                        coroutineScope.launch { driverState.close() }
                     },
 
                     onExcursionsClick = {
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooksFromCategory(db, faves, categoryList[5]) { books ->
-                                bookListState.value = books
-                                coroutineScope.launch { driverState.close() }
-                            }
-                        }
+                       viewModel.getAllBooksFromCategory(categoryList[5])
+                        coroutineScope.launch { driverState.close() }
                     },
 
                     onBookingClick = {
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooksFromCategory(db, faves, categoryList[6]) { books ->
-                                bookListState.value = books
-                                coroutineScope.launch { driverState.close() }
-                            }
-                        }
+                      viewModel.getAllBooksFromCategory(categoryList[6])
+                        coroutineScope.launch { driverState.close() }
                     },
 
                     onAdmin = { isAdmin ->
@@ -153,47 +125,40 @@ fun MainScreen(
                     },
                     onAddBookClick,
                     onCategoryClickString = { category ->
-                        getAllFavesIds(db, navData.uid) { faves ->
-                            getAllBooksFromCategory(db, faves, category) { books ->
-                                bookListState.value = books
-                            }
-                        }
+                        viewModel.getAllBooksFromCategory(category)
+                        coroutineScope.launch { driverState.close() }
                     }
-                ) /*{
-                    coroutineScope.launch { driverState.close() }
-                }*/
+                )
             }
         }
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            bottomBar = {/* Меню навигации под шторкой драйвер меню
+           /* bottomBar = {
                 ButtonMenu(
                     selectedItemTitle = "Home",
-                    onItemClick = {}
+                    onItemClick = {
+                        viewModel.selectedBottomItemState.value = ButtonMenuItem.Home.title
+                        viewModel.getAllBooks()
+                    }
+                )
 
-                )*/
-            }
+            }*/
         ) { paddingValues ->
-            if (isFavListEmptyState.value)
+
+            /* (!viewModel.isFavesListEmptyState.value)
                 Box(modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center){
                     BookListItemUiReserve()
-                }
+                }*/
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-
-               /* if (bookListState.value.isEmpty()) {
-                    items(10) {
-                        BookListItemUiReserve()
-                    }
-                } else*/
-                    items(bookListState.value) { book ->
-                        Log.d("MyLog", "MainScreen: ${bookListState}")
+                    items(viewModel.booksListState.value) { book ->
+                        Log.d("MyLog2", "MainScreen: ${viewModel.booksListState}")
                         BookListItemUi(
                             isAdminState.value,
                             book,
@@ -201,25 +166,10 @@ fun MainScreen(
                                 onBookClick(bk)
                             },
                             onEditClick = {
-                                onBookEditClick(book)
+                                onBookEditClick(it)
                             },
                             onFavesClick = {
-                                bookListState.value = bookListState.value.map { bk ->
-                                    if (bk.key == book.key) {
-                                        onFaves(
-                                            db,
-                                            navData.uid,
-                                            Favorite(book.key),
-                                            !bk.isFaves,
-                                        )
-                                        bk.copy(isFaves = !bk.isFaves)
-                                    } else {
-                                        bk
-                                    }
-                                }
-                                if (selectedBottomItemState.value == ButtonMenuItem.Favorite.title)
-                                    bookListState.value =
-                                        bookListState.value.sortedBy { it.isFaves }
+                                    viewModel.onFavesClick(book, viewModel.selectedBottomItemState.value)
                             }
                         )
                     }
@@ -227,6 +177,7 @@ fun MainScreen(
         }
     }
 }
+
 
 
 

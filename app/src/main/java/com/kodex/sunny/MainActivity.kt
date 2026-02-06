@@ -19,7 +19,7 @@ import com.kodex.bookmarket.navigation.NavRoutes
 import com.kodex.gpstracker.main_screen.settings.ui.SettingScreen
 import com.kodex.sunny.addScreen.AddBookScreen
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
-import com.kodex.sunny.main_screen.button_bar.ui.ButtonMenu
+import com.kodex.sunny.main_screen.button_bar.ui.ButtonMenuMap
 import com.kodex.sunny.main_screen.details.ui.DetailScreen
 import com.kodex.sunny.main_screen.login.ui.LoginScreen
 import com.kodex.sunny.main_screen.home.ui.MainScreen
@@ -48,20 +48,23 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        ButtonMenu(savedInstanceState.value) { savedInstanceTitle ->
-
+                        ButtonMenuMap(
+                            selectedItemTitle = savedInstanceState.value) { savedInstanceTitle ->
                             savedInstanceState.value = savedInstanceTitle
                             when (savedInstanceTitle) {
                                 ButtonMenuItem.Home.title -> navController.navigate(NavRoutes.MainScreenDataObject(
+                                    uid = "uid",
+                                    email = "email"
                                 ))
                                 ButtonMenuItem.Track.title -> navController.navigate(TrackerNavData)
                                 ButtonMenuItem.Login.title -> navController.navigate(NavRoutes.LoginScreenObject)
                                 ButtonMenuItem.Settings.title -> navController.navigate(SettingNavData)
                                 ButtonMenuItem.Map.title -> navController.navigate(NavRoutes.MapScreenObject)
                             }
-
                         }
-                    }) { innerPadding ->
+                    }
+
+                ) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = NavRoutes.LoginScreenObject,
@@ -71,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         composable<NavRoutes.MainScreenDataObject> { navEntry ->
                             val navData = navEntry.toRoute<NavRoutes.MainScreenDataObject>()
                             MainScreen(
-                                navData,
+                                navData = navData,
                                 onBookClick = { bk ->
                                     navController.navigate(NavRoutes.DetailsNavObject(
                                         title = bk.title,

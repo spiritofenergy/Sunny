@@ -15,9 +15,10 @@ class FirebaseManager(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore
 ) {
-    fun getAllFavesIds(
+    private fun getAllFavesIds(
         onFaves: (List<String>) -> Unit
     ) {
+        Log.d("MyLog", "fun getAllFavesIds: Start")
         getFavesCategoryReference()
             .get()
             .addOnSuccessListener { task ->
@@ -34,7 +35,7 @@ class FirebaseManager(
     }
 
 
-    private fun getAllFavesBooks(
+     fun getAllFavesBooks(
         onBooks: (List<Book>) -> Unit
     ) {
         getAllFavesIds { idsList ->
@@ -87,9 +88,11 @@ class FirebaseManager(
         }
     }
 
+
     fun getAllBooks(
         onBooks: (List<Book>) -> Unit
     ) {
+        Log.d("MyLog", "fun getAllBooks: Start")
         getAllFavesIds { idsList ->
             db.collection("books")
                 .get()
@@ -124,10 +127,26 @@ class FirebaseManager(
         }
     }
 
-    private fun getFavesCategoryReference(): CollectionReference {
+    fun changeFavState(books: List<Book>, book: Book) : List<Book> {
+        return  books.map { bk ->
+            if (bk.key == book.key) {
+                onFaves(
+                    Favorite(book.key),
+                    !bk.isFaves,
+                )
+                bk.copy(isFaves = !bk.isFaves)
+            } else {
+                bk
+            }
+        }
+    }
+
+
+
+     fun getFavesCategoryReference(): CollectionReference {
         return db.collection("users")
             .document(auth.uid ?: "")
-            .collection("favorite")
+            .collection("favorites")
     }
 
 }

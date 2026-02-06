@@ -19,13 +19,12 @@ object MainModule {
     @Singleton
     fun provideFirestoreAuth(): FirebaseAuth {
         return Firebase.auth
-
     }
+
     @Provides
     @Singleton
     fun provideFirebaseFireStore(): FirebaseFirestore {
         return Firebase.firestore
-
     }
 
     @Provides

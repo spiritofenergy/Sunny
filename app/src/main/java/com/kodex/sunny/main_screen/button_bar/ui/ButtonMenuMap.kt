@@ -9,17 +9,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
+import com.kodex.sunny.main_screen.home.ui.MainScreenViewModel
 
 @Composable
-fun ButtonMenu(
+fun ButtonMenuMap(
+    viewModel: MainScreenViewModel = hiltViewModel(),
     selectedItemTitle: String,
     onItemClick: (String)-> Unit,
     //onHomeClick: () -> Unit = {}
 ) {
     val items = listOf(
         ButtonMenuItem.Home,
-        ButtonMenuItem.Favorite,
         ButtonMenuItem.Track,
         ButtonMenuItem.Login,
         ButtonMenuItem.Map,
@@ -34,6 +36,7 @@ fun ButtonMenu(
                 onClick = {
                     onItemClick(item.title)
                     if (item.title == ButtonMenuItem.Home.title) {
+                        viewModel.getAllBooks()
                         Log.d("MyLog", "ButtonMenu: ${item.title}")
 
                    }

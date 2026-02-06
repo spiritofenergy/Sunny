@@ -28,7 +28,7 @@ fun RoundedCornerDropDownMenu(
     onOptionSelected: (String) -> Unit,
 ) {
     val expanded = remember { mutableStateOf(false) }
-    val categoryList = stringArrayResource(id = R.array.category_arrays)
+    val categoryList = stringArrayResource(id = R.array.category_arrays_dr)
     val selectedOption = remember { mutableStateOf(defCategory) }
   //  selectedOption.value = categoryList[defCategory]
 

@@ -1,4 +1,4 @@
-package com.kodex.sunny.main_screen.home.ui
+package com.kodex.sunny.main_screen.map.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -93,6 +93,7 @@ class MapViewModel @Inject constructor(
 
 }
 
+/*
 @Composable
 fun MapScreen() {
     Column(
@@ -102,4 +103,4 @@ fun MapScreen() {
     ) {
         Text(text = "MapScreen")
     }
-}
+}*/

@@ -34,7 +34,6 @@ import com.kodex.sunny.main_screen.home.map_utils.getAverageSpeed
 import com.kodex.sunny.main_screen.home.map_utils.isServiceRunning
 import com.kodex.sunny.main_screen.home.map_utils.startLocationService
 import com.kodex.sunny.main_screen.home.map_utils.stopLocationService
-import com.kodex.sunny.main_screen.home.ui.MapViewModel
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Polyline

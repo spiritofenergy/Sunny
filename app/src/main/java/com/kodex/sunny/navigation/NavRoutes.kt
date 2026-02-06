@@ -11,7 +11,7 @@ sealed class NavRoutes {
     data class MainScreenDataObject @SuppressLint("UnsafeOptInUsageError") constructor(
         val uid: String = "",
         val email: String = "",
-        val id: Int? = null,
+       /* val id: Int? = null,
         val key: String = "",
         val title: String = "",
         val searchTitle: String = title.lowercase(),
@@ -22,7 +22,7 @@ sealed class NavRoutes {
         val author: String = "",
         val timestamp: Long = System.currentTimeMillis(),
         val isFaves: Boolean = false,
-        val ratingsList: List<Int> = emptyList()
+        val ratingsList: List<Int> = emptyList()*/
     )
     @Serializable
     data class DetailsNavObject(
