@@ -29,6 +29,7 @@ import com.kodex.sunny.R
 import com.kodex.sunny.addScreen.data.Book
 import com.kodex.sunny.addScreen.data.BookListItemUi
 import com.kodex.sunny.addScreen.data.BookListItemUiReserve
+import com.kodex.sunny.custom_ui.MyDialog
 import com.kodex.sunny.drawer_menu.DrawerBody
 import com.kodex.sunny.drawer_menu.DrawerHeader
 import com.kodex.sunny.main_screen.button_bar.data.ButtonMenuItem
@@ -52,6 +53,7 @@ fun MainScreen(
     val savedInstanceState = remember { mutableStateOf(ButtonMenuItem.Home.title) }
     val coroutineScope = rememberCoroutineScope()
     val isAdminState = remember { mutableStateOf(false) }
+    val showDeleteDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (viewModel.booksListState.value.isEmpty()) {
@@ -146,11 +148,16 @@ fun MainScreen(
             }*/
         ) { paddingValues ->
 
-            /* (!viewModel.isFavesListEmptyState.value)
-                Box(modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center){
-                    BookListItemUiReserve()
-                }*/
+          if (showDeleteDialog.value){
+              MyDialog(
+                  showDialog = showDeleteDialog.value,
+                  onDismiss = { showDeleteDialog.value = false},
+                  onConfirm = { showDeleteDialog.value = false},
+                  title = "Delete this Book?",
+                  massage = "Are you sure you want to delete this book?",
+                  confirmButtonText = "Delete Book"
+              )
+          }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
                 modifier = Modifier

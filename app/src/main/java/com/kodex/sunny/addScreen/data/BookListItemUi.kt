@@ -187,5 +187,19 @@ fun BookListItemUi(
 @Preview(showBackground = true)
 @Composable
 fun ItemPreview() {
-    // BookListItemUi()
+    BookListItemUi(
+        book = Book(
+            key = "",
+            title = "Title",
+            description = "Description",
+            price = 0,
+            category = "Category",
+            timestamp = 0,
+            imageUrl = "",
+            isFaves = false,
+            ),
+        onEditClick = {},
+        onFavesClick = {},
+        onBookClick = {}
+    )
 }
